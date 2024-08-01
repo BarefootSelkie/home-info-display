@@ -21,11 +21,14 @@ inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-image.rounded_rectangle([(0,0),(159,119)], radius=6, fill=None, outline=colour["red"], width=2)
-image.rounded_rectangle([(160,0),(319,119)], radius=6, fill=None, outline=colour["green"], width=1)
-image.rounded_rectangle([(320,0),(479,119)], radius=6, fill=None, outline=colour["blue"], width=1)
+image.rounded_rectangle([(0,0),(159,119)], radius=12, fill=None, outline=colour["black"], width=2)
+image.rounded_rectangle([(161,0),(479,119)], radius=12, fill=None, outline=colour["black"], width=2)
 
-image.text((80, 60), "Text", colour["black"], font=bigFont, anchor="mm")
+image.rounded_rectangle([(0,121),(159,239)], radius=12, fill=None, outline=colour["red"], width=2)
+image.rounded_rectangle([(161,121),(319,239)], radius=12, fill=None, outline=colour["green"], width=2)
+image.rounded_rectangle([(321,121),(479,239)], radius=12, fill=None, outline=colour["blue"], width=2)
+
+image.text((80, 60), "O", colour["black"], font=bigFont, anchor="mm")
 
 
 inky.set_image(display.rotate(90, expand=True))
