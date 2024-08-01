@@ -9,6 +9,8 @@ river.json
 # MacOS Nonsense
 .DS*
 
+# Copyrighted stuff
+ttf/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
