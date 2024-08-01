@@ -1,1 +1,1 @@
-# home-info-display
+# home-information-display
