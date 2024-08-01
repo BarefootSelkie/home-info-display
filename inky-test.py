@@ -19,7 +19,7 @@ display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
 image.rounded_rectangle([(0,0),(159,119)], radius=6, fill=colour["red"], outline=None, width=1)
-image.rounded_rectangle([(160,0),(329,119)], radius=6, fill=colour["green"], outline=None, width=1)
+image.rounded_rectangle([(160,0),(319,119)], radius=6, fill=colour["green"], outline=None, width=1)
 image.rounded_rectangle([(320,0),(479,119)], radius=6, fill=colour["blue"], outline=None, width=1)
 
 inky.set_image(display.rotate(90))
