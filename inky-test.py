@@ -14,8 +14,8 @@ colour = {
     "orange": 6
     }
 
-bigFont = ImageFont.truetype("./LeagueSpartan-Medium.ttf", int(44))
-smallFont = ImageFont.truetype("./LeagueSpartan-Medium.ttf", int(24))
+bigFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(44))
+smallFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(24))
 
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
