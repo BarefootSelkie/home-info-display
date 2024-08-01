@@ -18,7 +18,7 @@ inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(800,480), color=(colour["orange"]))
 image = ImageDraw.Draw(display)
 
-image.rounded_rectangle([(0,0),(160,40)], radius=6, fill=colour["green"], outline=None, width=1)
+image.rounded_rectangle([(0,0),(160,120)], radius=6, fill=colour["green"], outline=None, width=1)
 
-inky.set_image(display)
+inky.set_image(display.rotate(90))
 inky.show()
