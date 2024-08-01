@@ -21,9 +21,9 @@ inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-image.rounded_rectangle([(0,0),(159,119)], radius=6, fill=colour["red"], outline=None, width=1)
-image.rounded_rectangle([(160,0),(319,119)], radius=6, fill=colour["green"], outline=None, width=1)
-image.rounded_rectangle([(320,0),(479,119)], radius=6, fill=colour["blue"], outline=None, width=1)
+image.rounded_rectangle([(0,0),(159,119)], radius=6, fill=None, outline=colour["red"], width=2)
+image.rounded_rectangle([(160,0),(319,119)], radius=6, fill=None, outline=colour["green"], width=1)
+image.rounded_rectangle([(320,0),(479,119)], radius=6, fill=None, outline=colour["blue"], width=1)
 
 image.text((80, 60), "Text", colour["black"], font=bigFont, anchor="mm")
 
