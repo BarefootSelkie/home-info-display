@@ -2,12 +2,10 @@
 
 # from inky.auto import auto
 from inky.inky_ac073tc1a import Inky as InkyAC073TC1A
+from PIL import Image, ImageDraw, ImageFont
 
 inky = InkyAC073TC1A(resolution=(800, 480))
+display = Image.new(mode="RGB", size=(800,480), color=(255,255,255))
 
-for y in range(inky.height - 1):
-    color = y // (inky.height // 7)
-    for x in range(inky.width - 1):
-        inky.set_pixel(x, y, color * 0x11)
-
+inky.set_image(display)
 inky.show()
