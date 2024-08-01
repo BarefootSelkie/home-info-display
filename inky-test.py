@@ -21,12 +21,12 @@ inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-image.rounded_rectangle([(0,0),(157,118)], radius=12, fill=None, outline=colour["black"], width=2)
-image.rounded_rectangle([(161,0),(479,118)], radius=12, fill=None, outline=colour["black"], width=2)
+image.rounded_rectangle([(0,0),(157,117)], radius=12, fill=None, outline=colour["black"], width=4)
+image.rounded_rectangle([(161,0),(479,117)], radius=12, fill=None, outline=colour["black"], width=4)
 
-image.rounded_rectangle([(0,120),(157,237)], radius=12, fill=None, outline=colour["red"], width=2)
-image.rounded_rectangle([(161,120),(318,237)], radius=12, fill=None, outline=colour["green"], width=2)
-image.rounded_rectangle([(322,120),(479,237)], radius=12, fill=None, outline=colour["blue"], width=2)
+image.rounded_rectangle([(0,121),(157,238)], radius=12, fill=None, outline=colour["red"], width=4)
+image.rounded_rectangle([(161,121),(318,238)], radius=12, fill=None, outline=colour["green"], width=4)
+image.rounded_rectangle([(322,121),(479,238)], radius=12, fill=None, outline=colour["blue"], width=4)
 
 image.text((80, 60), "O", colour["black"], font=bigFont, anchor="mm")
 
