@@ -1,6 +1,7 @@
 # Personal settings
 config-hid.yaml
 weather.json
+river.json
 
 # Logging
 *.log
