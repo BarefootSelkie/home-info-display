@@ -15,7 +15,7 @@ colour = {
     }
 
 inky = InkyAC073TC1A(resolution=(800, 480))
-display = Image.new(mode="P", size=(800,480), color=(colour["white"]))
+display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
 image.rounded_rectangle([(0,0),(159,119)], radius=6, fill=colour["red"], outline=None, width=1)
