@@ -3,6 +3,7 @@
 # from inky.auto import auto
 from inky.inky_ac073tc1a import Inky as InkyAC073TC1A
 from PIL import Image, ImageDraw, ImageFont
+import datetime
 
 colour = {
     "black": 0,
@@ -25,11 +26,15 @@ display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
 # Draw the calendar square in top left of screen
+dateNumber = datetime.date.today().strftime('%d')
+dateDay = datetime.date.today().strftime('%a')
+dateMonth = datetime.date.today().strftime('%b')
+
 image.rounded_rectangle([(0,0),(157,157)], radius=12, fill=None, outline=colour["red"], width=4)
 image.rounded_rectangle([(0,0),(157,41)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
-image.text((79,20), "Month", colour["white"], font=fontCalSm, anchor="mm")
-image.text((79,79), "00", colour["black"], font=fontCalBg, anchor="mm")
-image.text((79,136), "Day", colour["black"], font=fontCalSm, anchor="mm")
+image.text((79,20), dateMonth, colour["white"], font=fontCalSm, anchor="mm")
+image.text((79,79), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
+image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
 
 # Draw the next trip box next to the current date
 image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colour["black"], width=4)
