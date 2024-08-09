@@ -89,11 +89,11 @@ if len(upcomingTrips) > 0:
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
 
-    testText = "The quick brown fox jumped over the lazy dog"
-    lines = wrap(image, testText, 294, fontCalSm)
+    lines = wrap(image, nextTrip["destination"], 294, fontCalSm)
 
     image.text((170,28), lines[0], colour["black"], font=fontCalSm, anchor="lm")
-    image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
+    if len(lines) > 1:
+        image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
     image.text((320,108), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 width = 158
