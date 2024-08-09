@@ -17,16 +17,19 @@ colour = {
 bigFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(44))
 smallFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(24))
 
+fontCalBg = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(64))
+fontCalSm = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(32))
+
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-# Draw the date square in top left of screen
+# Draw the calendar square in top left of screen
 image.rounded_rectangle([(0,0),(157,157)], radius=12, fill=None, outline=colour["red"], width=4)
-image.rounded_rectangle([(0,0),(157,31)], radius=12, fill=colour["red"], outline=colour["red"], width=4)
-image.text((79,15), "Day", colour["black"], font=smallFont, anchor="mm")
-image.text((79,79), "00", colour["black"], font=bigFont, anchor="mm")
-image.text((79,141), "Mon", colour["black"], font=smallFont, anchor="mm")
+image.rounded_rectangle([(0,0),(157,41)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
+image.text((79,20), "Month", colour["black"], font=fontCalSm, anchor="mm")
+image.text((79,79), "00", colour["black"], font=fontCalBg, anchor="mm")
+image.text((79,136), "Day", colour["black"], font=fontCalSm, anchor="mm")
 
 # Draw the next trip box next to the current date
 image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colour["black"], width=4)
@@ -45,8 +48,6 @@ for row in range(3):
 
         image.rounded_rectangle([(stx,sty),(spx,spy)], radius=12, fill=None, outline=colour["black"], width=4)
         image.text(((width / 2) +  stx, (height / 2) + sty), str(row) + "-" + str(col), colour["black"], font=bigFont, anchor="mm")
-
-image.text((80, 60), "O", colour["black"], font=bigFont, anchor="mm")
 
 
 inky.set_image(display.rotate(90, expand=True))
