@@ -28,6 +28,7 @@ def wrap(image, text, wrapWidth, font):
                 output.append(currentLine)
                 currentLine = ""
         
+    currentLine = currentLine + currentWord
     output.append(currentLine)
 
     return output
