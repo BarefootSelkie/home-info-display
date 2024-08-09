@@ -59,8 +59,10 @@ upcomingTrips.sort(key=lambda trip: trip["date"], reverse=True)
 
 if len(upcomingTrips) > 0:
     nextTrip = upcomingTrips[0]
-    image.text((79,79), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
-    image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
+    nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
+    todayDate = datetime.date.today()
+    daysRemaining = (nextTripDate - todayDate).days
+    image.text((161+11,0+11), daysRemaining, colour["black"], font=fontCalBg, anchor="tl")
 
 
 
