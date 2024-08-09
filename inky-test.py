@@ -16,6 +16,7 @@ def wrap(image, text, wrapWidth, font):
     for character in text:
         if character == " ":
             currentLine = currentLine + currentWord + character
+            currentWord = ""
         else:
             currentWord = currentWord + character
 
@@ -88,7 +89,7 @@ if len(upcomingTrips) > 0:
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
 
-    testText = "test test testing test testing stuff thing test test testing test testing stuff thing"
+    testText = "The quick brown fox jumped over the lazy dog"
     lines = wrap(image, testText, 294, fontCalSm)
 
     image.text((170,28), lines[0], colour["black"], font=fontCalSm, anchor="lm")
