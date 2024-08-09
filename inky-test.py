@@ -50,7 +50,7 @@ image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colou
 
 # Get trips that haven't happened yet
 upcomingTrips = []
-for trip in trips:
+for trip in trips["trips"]:
     if datetime.date.fromisoformat(trip["date"]) < datetime.date.today():
         upcomingTrips.append(trip)
 
