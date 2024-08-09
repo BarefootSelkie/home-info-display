@@ -51,18 +51,18 @@ image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colou
 # Get trips that haven't happened yet
 upcomingTrips = []
 for trip in trips["trips"]:
-    if datetime.date.fromisoformat(str(trip["date"])) < datetime.date.today():
+    if datetime.date.fromisoformat(str(trip["date"])) > datetime.date.today():
         upcomingTrips.append(trip)
 
 # Sort the list
-upcomingTrips.sort(key=lambda trip: trip["date"], reverse=True)
+upcomingTrips.sort(key=lambda trip: trip["date"], reverse=False)
 
 if len(upcomingTrips) > 0:
     nextTrip = upcomingTrips[0]
     nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
-    image.text((161+11,0+11), daysRemaining, colour["black"], font=fontCalBg, anchor="tl")
+    image.text((161+11,0+11), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="lt")
 
 
 
