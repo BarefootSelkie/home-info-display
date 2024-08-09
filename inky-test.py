@@ -6,6 +6,31 @@ from PIL import Image, ImageDraw, ImageFont
 import datetime
 import yaml
 
+# given an input text string, return a list of strings that don't exceed a certain pixel width
+def wrap(image, text, wrapWidth, font):
+    output = []
+    currentLine = ""
+    currentWord = ""
+
+    # For each charater in the text
+    for character in text:
+        if character is " ":
+            currentLine = currentLine + currentWord
+        else:
+            currentWord = currentWord + character
+
+            # check if adding the character would exceed the wrap width
+            newWidth = image.textlength(currentLine + currentWord, font)
+
+            if newWidth > wrapWidth:
+                # if so, add the current line to the output list and start a new line
+                output.append(currentLine)
+                currentLine = ""
+        
+    output.append(currentLine)
+
+    return output
+
 # Load trips
 try:
     with open("./trips.yaml", "r") as read_file:
@@ -62,8 +87,12 @@ if len(upcomingTrips) > 0:
     nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
-    image.text((170,28), "line 1", colour["black"], font=fontCalSm, anchor="lm")
-    image.text((170,60), "line 2", colour["black"], font=fontCalSm, anchor="lm")
+
+    testText = "test test testing test testing stuff thing test test testing test testing stuff thing"
+    lines = wrap(image, testText, 294, fontCalSm)
+
+    image.text((170,28), lines[0], colour["black"], font=fontCalSm, anchor="lm")
+    image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
     image.text((320,108), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 width = 158
