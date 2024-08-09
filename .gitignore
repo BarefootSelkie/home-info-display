@@ -2,6 +2,8 @@
 config-hid.yaml
 weather.json
 river.json
+trips.yaml
+example.json
 
 # Logging
 *.log

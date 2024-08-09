@@ -4,6 +4,15 @@
 from inky.inky_ac073tc1a import Inky as InkyAC073TC1A
 from PIL import Image, ImageDraw, ImageFont
 import datetime
+import yaml
+
+# Load trips
+try:
+    with open("./trips.yaml", "r") as read_file:
+        trips = yaml.safe_load(read_file)
+except:
+    # logging.critical("Settings file missing")
+    exit()
 
 colour = {
     "black": 0,
@@ -15,11 +24,11 @@ colour = {
     "orange": 6
     }
 
-bigFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(44))
-smallFont = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(24))
+bigFont = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
+smallFont = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
 
-fontCalBg = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(64))
-fontCalSm = ImageFont.truetype("./ttf/LeagueSpartan-Medium.ttf", int(32))
+fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
+fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
@@ -39,6 +48,24 @@ image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
 # Draw the next trip box next to the current date
 image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colour["black"], width=4)
 
+# Get trips that haven't happened yet
+upcomingTrips = []
+for trip in trips:
+    if datetime.date.fromisoformat(trip["date"]) < datetime.date.today():
+        upcomingTrips.append(trip)
+
+# Sort the list
+upcomingTrips.sort(key=lambda trip: trip["date"], reverse=True)
+
+if len(upcomingTrips) > 0:
+    nextTrip = upcomingTrips[0]
+    image.text((79,79), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
+    image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
+
+
+
+
+
 width = 158
 height = 118
 padding = 3
@@ -53,7 +80,6 @@ for row in range(4):
 
         image.rounded_rectangle([(stx,sty),(spx,spy)], radius=12, fill=None, outline=colour["black"], width=4)
         image.text(((width / 2) +  stx, (height / 2) + sty), str(row) + "-" + str(col), colour["black"], font=bigFont, anchor="mm")
-
-
+ 
 inky.set_image(display.rotate(90, expand=True))
 inky.show()
