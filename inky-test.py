@@ -62,7 +62,7 @@ if len(upcomingTrips) > 0:
     nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
-    image.text((320,130), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
+    image.text((320,118), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 
 width = 158
