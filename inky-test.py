@@ -14,8 +14,8 @@ def wrap(image, text, wrapWidth, font):
 
     # For each charater in the text
     for character in text:
-        if character is " ":
-            currentLine = currentLine + currentWord
+        if character == " ":
+            currentLine = currentLine + currentWord + character
         else:
             currentWord = currentWord + character
 
