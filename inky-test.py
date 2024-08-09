@@ -27,7 +27,7 @@ image = ImageDraw.Draw(display)
 # Draw the calendar square in top left of screen
 image.rounded_rectangle([(0,0),(157,157)], radius=12, fill=None, outline=colour["red"], width=4)
 image.rounded_rectangle([(0,0),(157,41)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
-image.text((79,20), "Month", colour["black"], font=fontCalSm, anchor="mm")
+image.text((79,20), "Month", colour["white"], font=fontCalSm, anchor="mm")
 image.text((79,79), "00", colour["black"], font=fontCalBg, anchor="mm")
 image.text((79,136), "Day", colour["black"], font=fontCalSm, anchor="mm")
 
@@ -39,8 +39,8 @@ height = 118
 padding = 3
 offset = 161
 
-for row in range(3):
-    for col in range(2): 
+for row in range(4):
+    for col in range(3): 
         stx = (width + padding) * col
         sty = ((height + padding) * row) + offset
         spx = stx + width - 1
