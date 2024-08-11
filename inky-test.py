@@ -151,7 +151,7 @@ for box in config["boxes"]:
     spy = sty + height - 1 
     position = [(stx,sty),(spx,spy)]
 
-    if box['title'] is not None:
+    if box['label'] is not None:
         if box['data2'] is not None:
             boxTitledDual(position)
         else:
