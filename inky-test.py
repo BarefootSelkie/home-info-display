@@ -129,21 +129,24 @@ offset = 161
 # look at box design - get template - fill in data - place in image
 
 def boxTitledBig(box, position):
+    data1 = objectpath.Tree(weather).execute(box["data1"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
 def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    key = box["data1"]
-    text = weather[str(key)]
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), text, colour["black"], font=bigFont, anchor="mm")
+    data1 = objectpath.Tree(weather).execute(box["data1"])
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
 def boxTitledDual(box, position):
+    data1 = objectpath.Tree(weather).execute(box["data1"])
+    data2 = objectpath.Tree(weather).execute(box["data2"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
 def boxDual(box, position):
-    key = box["data1"]
-    text = objectpath.Tree(weather).execute(key)
+    data1 = objectpath.Tree(weather).execute(box["data1"])
+    data2 = objectpath.Tree(weather).execute(box["data2"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(text), colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=smallFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=smallFont, anchor="mm")
 
 index = 0
 rowWidth = 3
