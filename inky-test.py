@@ -127,18 +127,22 @@ offset = 161
 
 # look at box design - get template - fill in data - place in image
 
-def boxTitledBig(position):
+def boxTitledBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
-def boxBig(position):
+def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
-def boxTitledDual(position):
+    key = box["data1"]
+    text = weather[str(key)]
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), text, colour["black"], font=bigFont, anchor="mm")
+def boxTitledDual(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
-def boxDual(position):
+def boxDual(box, position):
+    key = box["data1"]
+    text = weather[str(key)]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), text, colour["black"], font=bigFont, anchor="mm")
 
 index = 0
 rowWidth = 3
@@ -153,14 +157,14 @@ for box in config["boxes"]:
 
     if box['label'] is not None:
         if box['data2'] is not None:
-            boxTitledDual(position)
+            boxTitledDual(box, position)
         else:
-            boxTitledBig(position)
+            boxTitledBig(box, position)
     else:
         if box['data2'] is not None:
-            boxDual(position)
+            boxDual(box, position)
         else:
-            boxBig(position)
+            boxBig(box, position)
     index = index + 1
 
 
