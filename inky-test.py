@@ -5,6 +5,20 @@ from inky.inky_ac073tc1a import Inky as InkyAC073TC1A
 from PIL import Image, ImageDraw, ImageFont
 import datetime
 import yaml
+import logging
+import requests
+import json
+
+# Logging setup
+logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
+
+# Load settings
+try:
+    with open("./config-hid.yaml", "r") as read_file:
+        config = yaml.safe_load(read_file)
+except:
+    logging.critical("Settings file missing")
+    exit()
 
 # given an input text string, return a list of strings that don't exceed a certain pixel width
 def wrap(image, text, wrapWidth, font):
@@ -40,6 +54,15 @@ try:
 except:
     # logging.critical("Settings file missing")
     exit()
+
+# Load weather data
+weather = None
+try:
+    r = requests.get("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" + str(config["location"]["lat"]) + "%2C" + str(config["location"]["long"]) + "/today?unitGroup=metric&include=remote%2Cobs%2Cfcst%2Ccurrent%2Calerts%2Cevents&key=" + config["apikeys"]["weather"] + "&contentType=json")
+    weather = json.loads(r.text)
+except Exception as e:
+    logging.warning(e)
+    logging.warning(r.text)
 
 colour = {
     "black": 0,
@@ -102,15 +125,44 @@ height = 118
 padding = 3
 offset = 161
 
-for row in range(4):
-    for col in range(3): 
-        stx = (width + padding) * col
-        sty = ((height + padding) * row) + offset
-        spx = stx + width - 1
-        spy = sty + height - 1 
+# look at box design - get template - fill in data - place in image
 
-        image.rounded_rectangle([(stx,sty),(spx,spy)], radius=12, fill=None, outline=colour["black"], width=4)
-        image.text(((width / 2) +  stx, (height / 2) + sty), str(row) + "-" + str(col), colour["black"], font=bigFont, anchor="mm")
- 
+def boxTitledBig(position):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
+    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+def boxBig(position):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
+    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+def boxTitledDual(position):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
+    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+def boxDual(position):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
+    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+
+index = 0
+rowWidth = 3
+for box in config["boxes"]:
+    row = index // rowWidth
+    col = index % rowWidth
+    stx = (width + padding) * col
+    sty = ((height + padding) * row) + offset
+    spx = stx + width - 1
+    spy = sty + height - 1 
+    position = [(stx,sty),(spx,spy)]
+
+    if box['title'] is not None:
+        if box['data2'] is not None:
+            boxTitledDual(position)
+        else:
+            boxTitledBig(position)
+    else:
+        if box['data2'] is not None:
+            boxDual(position)
+        else:
+            boxBig(position)
+    index = index + 1
+
+
 inky.set_image(display.rotate(90, expand=True))
 inky.show()
