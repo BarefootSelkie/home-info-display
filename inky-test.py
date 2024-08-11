@@ -8,6 +8,7 @@ import yaml
 import logging
 import requests
 import json
+import objectpath
 
 # Logging setup
 logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
@@ -140,7 +141,7 @@ def boxTitledDual(box, position):
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
 def boxDual(box, position):
     key = box["data1"]
-    text = weather[str(key)]
+    text = objectpath.Tree(weather).execute(key)
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), text, colour["black"], font=bigFont, anchor="mm")
 
