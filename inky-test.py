@@ -129,16 +129,16 @@ offset = 161
 
 def boxTitledBig(position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
-    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
 def boxBig(position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
 def boxTitledDual(position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
-    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
 def boxDual(position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0], (height / 2) + position[1]), "test", colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), "test", colour["black"], font=bigFont, anchor="mm")
 
 index = 0
 rowWidth = 3
