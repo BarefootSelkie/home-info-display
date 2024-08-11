@@ -143,7 +143,7 @@ def boxDual(box, position):
     key = box["data1"]
     text = objectpath.Tree(weather).execute(key)
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), text, colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(text), colour["black"], font=bigFont, anchor="mm")
 
 index = 0
 rowWidth = 3
