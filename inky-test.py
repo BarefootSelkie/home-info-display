@@ -149,7 +149,7 @@ def boxTitledDual(box, position):
     if "unit1" in box:
         data1 = data1 + box["unit1"]
     if "unit2" in box:
-        data1 = data1 + box["unit2"]
+        data2 = data2 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
@@ -160,7 +160,7 @@ def boxDual(box, position):
     if "unit1" in box:
         data1 = data1 + box["unit1"]
     if "unit2" in box:
-        data1 = data1 + box["unit2"]
+        data2 = data2 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=fontGridDual, anchor="mm")
