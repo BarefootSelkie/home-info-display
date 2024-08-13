@@ -198,9 +198,9 @@ for box in config["boxes"]:
         box["text1"] = str(objectpath.Tree(weather).execute(box["data1"]))
     if box["data2"] is not None:
         box["text2"] = str(objectpath.Tree(weather).execute(box["data2"]))
-    if "unit1" is not None:
+    if box["unit1"] is not None:
         box["text1"] = box["text1"] + box["unit1"]
-    if "unit2" is not None:
+    if box["unit2"] is not None:
         box["text2"] = box["text2"] + box["unit2"]
 
     if box['label'] is not None:
