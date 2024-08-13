@@ -21,6 +21,52 @@ except:
     logging.critical("Settings file missing")
     exit()
 
+
+# Constants
+colour = {
+    "black": 0,
+    "white": 1,
+    "green": 2,
+    "blue": 3,
+    "red": 4,
+    "yellow": 5,
+    "orange": 6
+    }
+
+fontGridSingle = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
+fontGridDual = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
+fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
+
+fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
+fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
+
+
+
+# Functions
+
+def toCompassPoint(degrees):
+    if degrees < 22.5:
+        return "N"
+    if degrees < 67.5:
+        return "NE"
+    if degrees < 112.5:
+        return "E"
+    if degrees < 157.5:
+        return "SE"
+    if degrees < 202.5:
+        return "S"
+    if degrees < 247.5:
+        return "SW"
+    if degrees < 292.5:
+        return "W"
+    if degrees < 337.5:
+        return "NW"
+    return "N"
+
+def msToKmh(ms):
+    kmh = ms * 3.6
+    return kmh    
+
 # given an input text string, return a list of strings that don't exceed a certain pixel width
 def wrap(image, text, wrapWidth, font):
     output = []
@@ -48,6 +94,9 @@ def wrap(image, text, wrapWidth, font):
 
     return output
 
+
+
+
 # Load trips
 try:
     with open("./trips.yaml", "r") as read_file:
@@ -65,23 +114,7 @@ except Exception as e:
     logging.warning(e)
     logging.warning(r.text)
 
-colour = {
-    "black": 0,
-    "white": 1,
-    "green": 2,
-    "blue": 3,
-    "red": 4,
-    "yellow": 5,
-    "orange": 6
-    }
-
-fontGridSingle = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
-fontGridDual = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
-fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
-
-fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
-fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
-
+# Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
@@ -131,39 +164,24 @@ padding = 10
 # look at box design - get template - fill in data - place in image
 
 def boxTitledBig(box, position):
-    data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    if "unit1" in box: 
-        data1 = data1 + box["unit1"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), data1, colour["black"], font=fontGridSingle, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), box["text1"], colour["black"], font=fontGridSingle, anchor="mm")
+
 def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    if "unit1" in box:
-        data1 = data1 + box["unit1"]
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridSingle, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(box["text1"]), colour["black"], font=fontGridSingle, anchor="mm")
+
 def boxTitledDual(box, position):
-    data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    data2 = str(objectpath.Tree(weather).execute(box["data2"]))
-    if "unit1" in box:
-        data1 = data1 + box["unit1"]
-    if "unit2" in box:
-        data2 = data2 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), box["text1"], colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), box["text2"], colour["black"], font=fontGridDual, anchor="mm")
+
 def boxDual(box, position):
-    data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    data2 = str(objectpath.Tree(weather).execute(box["data2"]))
-    if "unit1" in box:
-        data1 = data1 + box["unit1"]
-    if "unit2" in box:
-        data2 = data2 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), box["text1"], colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), box["text2"], colour["black"], font=fontGridDual, anchor="mm")
 
 index = 0
 rowWidth = 3
@@ -175,6 +193,15 @@ for box in config["boxes"]:
     spx = stx + width - 1
     spy = sty + height - 1 
     position = [(stx,sty),(spx,spy)]
+
+    if box["data1"] is not None:
+        box["text1"] = str(objectpath.Tree(weather).execute(box["data1"]))
+    if box["data2"] is not None:
+        box["text2"] = str(objectpath.Tree(weather).execute(box["data2"]))
+    if "unit1" is not None:
+        box["text1"] = box["text1"] + box["unit1"]
+    if "unit2" is not None:
+        box["text2"] = box["text2"] + box["unit2"]
 
     if box['label'] is not None:
         if box['data2'] is not None:
