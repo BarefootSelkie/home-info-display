@@ -75,8 +75,9 @@ colour = {
     "orange": 6
     }
 
-bigFont = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
-smallFont = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
+fontGridSingle = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
+fontGridDual = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
+fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
 
 fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
 fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
@@ -132,25 +133,25 @@ padding = 10
 def boxTitledBig(box, position):
     data1 = objectpath.Tree(weather).execute(box["data1"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
-    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=smallFont, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridSingle, anchor="mm")
 def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
     data1 = objectpath.Tree(weather).execute(box["data1"])
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridSingle, anchor="mm")
 def boxTitledDual(box, position):
     data1 = objectpath.Tree(weather).execute(box["data1"])
     data2 = objectpath.Tree(weather).execute(box["data2"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
-    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=smallFont, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=smallFont, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=smallFont, anchor="mm")
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=fontGridDual, anchor="mm")
 def boxDual(box, position):
     data1 = objectpath.Tree(weather).execute(box["data1"])
     data2 = objectpath.Tree(weather).execute(box["data2"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=smallFont, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=smallFont, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), str(data2), colour["black"], font=fontGridDual, anchor="mm")
 
 index = 0
 rowWidth = 3
