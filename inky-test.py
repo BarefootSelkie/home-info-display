@@ -194,14 +194,14 @@ for box in config["boxes"]:
     spy = sty + height - 1 
     position = [(stx,sty),(spx,spy)]
 
-    if box["data1"] is not None:
+    if "data1" in box and box["data1"] is not None:
         box["text1"] = str(objectpath.Tree(weather).execute(box["data1"]))
-    if box["data2"] is not None:
+    if "data2" in box and box["data2"] is not None:
         box["text2"] = str(objectpath.Tree(weather).execute(box["data2"]))
-    if box["unit1"] is not None:
-        box["text1"] = box["text1"] + box["unit1"]
-    if box["unit2"] is not None:
-        box["text2"] = box["text2"] + box["unit2"]
+    if "unit1" in box and box["unit1"] is not None:
+        box["text1"] = box["text1"] + " " + box["unit1"]
+    if "unit2" in box and box["unit2"] is not None:
+        box["text2"] = box["text2"] + " " + box["unit2"]
 
     if box['label'] is not None:
         if box['data2'] is not None:
