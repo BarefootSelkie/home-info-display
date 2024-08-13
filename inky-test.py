@@ -132,7 +132,7 @@ padding = 10
 
 def boxTitledBig(box, position):
     data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    if box["unit1"]: 
+    if "unit1" in box: 
         data1 = data1 + box["unit1"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
@@ -140,15 +140,15 @@ def boxTitledBig(box, position):
 def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
     data1 = str(objectpath.Tree(weather).execute(box["data1"]))
-    if box["unit1"]: 
+    if "unit1" in box:
         data1 = data1 + box["unit1"]
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=fontGridSingle, anchor="mm")
 def boxTitledDual(box, position):
     data1 = str(objectpath.Tree(weather).execute(box["data1"]))
     data2 = str(objectpath.Tree(weather).execute(box["data2"]))
-    if box["unit1"]: 
+    if "unit1" in box:
         data1 = data1 + box["unit1"]
-    if box["unit2"]: 
+    if "unit2" in box:
         data1 = data1 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
@@ -157,9 +157,9 @@ def boxTitledDual(box, position):
 def boxDual(box, position):
     data1 = str(objectpath.Tree(weather).execute(box["data1"]))
     data2 = str(objectpath.Tree(weather).execute(box["data2"]))
-    if box["unit1"]: 
+    if "unit1" in box:
         data1 = data1 + box["unit1"]
-    if box["unit2"]: 
+    if "unit2" in box:
         data1 = data1 + box["unit2"]
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), str(data1), colour["black"], font=fontGridDual, anchor="mm")
