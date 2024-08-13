@@ -132,6 +132,7 @@ padding = 10
 def boxTitledBig(box, position):
     data1 = objectpath.Tree(weather).execute(box["data1"])
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=smallFont, anchor="la")
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(data1), colour["black"], font=bigFont, anchor="mm")
 def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
