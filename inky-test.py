@@ -204,12 +204,12 @@ for box in config["boxes"]:
         box["text2"] = box["text2"] + " " + box["unit2"]
 
     if box['label'] is not None:
-        if box['data2'] is not None:
+        if "data2" in box and box["data2"] is not None:
             boxTitledDual(box, position)
         else:
             boxTitledBig(box, position)
     else:
-        if box['data2'] is not None:
+        if "data2" in box and box["data2"] is not None:
             boxDual(box, position)
         else:
             boxBig(box, position)
