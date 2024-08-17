@@ -96,7 +96,8 @@ def wrap(image, text, wrapWidth, font):
 
 
 converters = {
-    "windDirection": lambda x: toCompassPoint(float(x))
+    "windDirection": lambda degrees: toCompassPoint(float(degrees)),
+    "time": lambda time: time[:5]
 }
 
 
