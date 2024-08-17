@@ -13,6 +13,7 @@ example.json
 
 # Copyrighted stuff
 ttf/*
+png/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
