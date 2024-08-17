@@ -2,7 +2,7 @@
 
 # from inky.auto import auto
 from inky.inky_ac073tc1a import Inky as InkyAC073TC1A
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 import datetime
 import yaml
 import logging
@@ -179,8 +179,9 @@ def boxBig(box, position):
 def boxIcon(box, position):
     fileIcon = "./png/" + box["text1"] + ".png"
     iconWeather = Image.open(fileIcon)
+    iconWeather = ImageOps.invert(iconWeather)
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    image.bitmap((((width / 2) - 48) + position[0][0], ((height / 2) - 48) + position[0][1]), iconWeather, fill=colour["black"])
+    image.bitmap((((width / 2) - 48) + position[0][0], ((height / 2) - 48) + position[0][1]), iconWeather)
 
 def boxTitledDual(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
