@@ -219,7 +219,7 @@ for box in config["boxes"]:
     if "unit2" in box and box["unit2"] is not None:
         box["text2"] = box["text2"] + " " + box["unit2"]
 
-    if "type" in box and box["type"] is "weathericon":
+    if "type" in box and box["type"] == "weathericon":
         boxIcon(box, position)
     elif box['label'] is not None:
         if "data2" in box and box["data2"] is not None:
