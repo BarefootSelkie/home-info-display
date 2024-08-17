@@ -180,7 +180,7 @@ def boxIcon(box, position):
     fileIcon = "./png/" + box["text1"] + ".png"
     iconWeather = Image.open(fileIcon)
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    image.paste(iconWeather, (((width / 2) - 64) + position[0][0], ((height / 2) - 64) + position[0][1]))
+    display.paste(iconWeather, (((width / 2) - 64) + position[0][0], ((height / 2) - 64) + position[0][1]))
 
 def boxTitledDual(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
