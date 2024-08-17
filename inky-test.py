@@ -95,6 +95,9 @@ def wrap(image, text, wrapWidth, font):
     return output
 
 
+converters = {
+    "windDirection": lambda x: toCompassPoint(float(x))
+}
 
 
 # Load trips
@@ -198,6 +201,12 @@ for box in config["boxes"]:
         box["text1"] = str(objectpath.Tree(weather).execute(box["data1"]))
     if "data2" in box and box["data2"] is not None:
         box["text2"] = str(objectpath.Tree(weather).execute(box["data2"]))
+
+    if "converter1" in box and box["converter1"] is not None:
+        box["text1"] = converters[box["converter1"]](box["text1"])
+    if "converter2" in box and box["converter2"] is not None:
+        box["text2"] = converters[box["converter2"]](box["text2"])
+
     if "unit1" in box and box["unit1"] is not None:
         box["text1"] = box["text1"] + " " + box["unit1"]
     if "unit2" in box and box["unit2"] is not None:
