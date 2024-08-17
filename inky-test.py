@@ -176,6 +176,12 @@ def boxBig(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(box["text1"]), colour["black"], font=fontGridSingle, anchor="mm")
 
+def boxIcon(box, position):
+    fileIcon = "./png/" + box["text1"] + ".png"
+    iconWeather = Image.open(fileIcon)
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
+    image.paste(iconWeather, (((width / 2) - 64) + position[0][0], ((height / 2) - 64) + position[0][1]))
+
 def boxTitledDual(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
@@ -213,7 +219,9 @@ for box in config["boxes"]:
     if "unit2" in box and box["unit2"] is not None:
         box["text2"] = box["text2"] + " " + box["unit2"]
 
-    if box['label'] is not None:
+    if "type" in box and box["type"] is "weathericon":
+        boxIcon(box, position)
+    elif box['label'] is not None:
         if "data2" in box and box["data2"] is not None:
             boxTitledDual(box, position)
         else:
@@ -223,6 +231,7 @@ for box in config["boxes"]:
             boxDual(box, position)
         else:
             boxBig(box, position)
+    
     index = index + 1
 
 
