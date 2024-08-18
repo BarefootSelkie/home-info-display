@@ -181,7 +181,7 @@ def boxWeatherIcon(box, position, values):
 # standard boxes
 def boxTitledBig(box, position, values):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
-    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
 
 def boxBig(box, position, values):
@@ -190,7 +190,7 @@ def boxBig(box, position, values):
 
 def boxTitledDual(box, position, values):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
-    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
