@@ -162,7 +162,7 @@ if len(upcomingTrips) > 0:
 # Draw a text box below the date and next trip
 messageOfHour = "So long and thanks for all the fish"
 image.rounded_rectangle([(0,161),(479,195)], radius=12, fill=None, outline=colour["blue"], width=4)
-image.text((17, 239), messageOfHour, colour["blue"], font=fontGridLabel, anchor="mm")
+image.text((239, 161+17), messageOfHour, colour["blue"], font=fontGridLabel, anchor="mm")
 
 width = 158
 height = 118
