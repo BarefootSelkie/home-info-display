@@ -216,16 +216,20 @@ def getValue(value):
 
     return output
 
-index = 0
-rowWidth = 3
-for box in config["boxes"]:
+def getBoxPosition(index):
     row = index // rowWidth
     col = index % rowWidth
     stx = (width + cellSpacing) * col
     sty = ((height + cellSpacing) * row) + offset
     spx = stx + width - 1
     spy = sty + height - 1 
-    position = [(stx,sty),(spx,spy)]
+    
+    return [(stx,sty),(spx,spy)]
+
+index = 0
+rowWidth = 3
+for box in config["boxes"]:
+    position = getBoxPosition(index)    
 
     values = []
     if "values" in box:
