@@ -170,32 +170,51 @@ padding = 10
 
 # look at box design - get template - fill in data - place in image
 
-def boxTitledBig(box, position):
-    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
-    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), box["text1"], colour["black"], font=fontGridSingle, anchor="mm")
-
-def boxBig(box, position):
-    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), str(box["text1"]), colour["black"], font=fontGridSingle, anchor="mm")
-
-def boxIcon(box, position):
-    fileIcon = "./png/" + box["text1"] + ".png"
+# edge case boxes
+def boxWeatherIcon(box, position, values):
+    fileIcon = "./png/" + values[0] + ".png"
     iconWeather = Image.open(fileIcon)
     iconWeather = ImageOps.invert(iconWeather)
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
     image.bitmap((((width / 2) - 48) + position[0][0], ((height / 2) - 48) + position[0][1]), iconWeather)
 
-def boxTitledDual(box, position):
+# standard boxes
+def boxTitledBig(box, position, values):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
+    image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+
+def boxBig(box, position, values):
+    image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+
+def boxTitledDual(box, position, values):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
     image.text((padding +  position[0][0], padding + position[0][1]), str(box['label']), colour["black"], font=fontGridLabel, anchor="la")
-    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), box["text1"], colour["black"], font=fontGridDual, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), box["text2"], colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def boxDual(box, position):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), box["text1"], colour["black"], font=fontGridDual, anchor="mm")
-    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), box["text2"], colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), values[0] colour["black"], font=fontGridDual, anchor="mm")
+    image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
+
+def getValue(value):
+    output = str(objectpath.Tree(weather).execute(value["path"]))
+    
+    if "converter" in value and value["converter"] is not None:
+        output = converters[value["converter"]](output)
+
+    if "round" in value and value["round"]:
+        output = str(int(output))
+
+    if "prefix" in value and value["prefix"] is not None:
+        output = value["prefix"] + output
+
+    if "suffix" in value and value["suffix"] is not None:
+        output = output + value["suffix"]
+
+    return output
 
 index = 0
 rowWidth = 3
@@ -208,33 +227,23 @@ for box in config["boxes"]:
     spy = sty + height - 1 
     position = [(stx,sty),(spx,spy)]
 
-    if "data1" in box and box["data1"] is not None:
-        box["text1"] = str(objectpath.Tree(weather).execute(box["data1"]))
-    if "data2" in box and box["data2"] is not None:
-        box["text2"] = str(objectpath.Tree(weather).execute(box["data2"]))
-
-    if "converter1" in box and box["converter1"] is not None:
-        box["text1"] = converters[box["converter1"]](box["text1"])
-    if "converter2" in box and box["converter2"] is not None:
-        box["text2"] = converters[box["converter2"]](box["text2"])
-
-    if "unit1" in box and box["unit1"] is not None:
-        box["text1"] = box["text1"] + " " + box["unit1"]
-    if "unit2" in box and box["unit2"] is not None:
-        box["text2"] = box["text2"] + " " + box["unit2"]
+    values = []
+    if "values" in box:
+        for value in box["values"]:
+            values.append(getValue(value))
 
     if "type" in box and box["type"] == "weathericon":
-        boxIcon(box, position)
+        boxWeatherIcon(box, position, values)
     elif box['label'] is not None:
-        if "data2" in box and box["data2"] is not None:
-            boxTitledDual(box, position)
+        if len(values) > 1:
+            boxTitledDual(box, position, values)
         else:
-            boxTitledBig(box, position)
+            boxTitledBig(box, position, values)
     else:
-        if "data2" in box and box["data2"] is not None:
-            boxDual(box, position)
+        if len(values) > 1:
+            boxDual(box, position, values)
         else:
-            boxBig(box, position)
+            boxBig(box, position, values)
     
     index = index + 1
 
