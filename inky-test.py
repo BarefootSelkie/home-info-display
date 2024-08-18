@@ -22,7 +22,7 @@ except:
     exit()
 
 
-# Constants
+### Constants ###
 colour = {
     "black": 0,
     "white": 1,
@@ -42,7 +42,7 @@ fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 
 
 
-# Functions
+### Functions ###
 
 def toCompassPoint(degrees):
     if degrees < 22.5:
@@ -159,10 +159,13 @@ if len(upcomingTrips) > 0:
         image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
     image.text((320,108), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
+# Draw a text box below the date and next trip
+image.rounded_rectangle([(0,161),(479,195)], radius=12, fill=None, outline=colour["black"], width=4)
+
 width = 158
 height = 118
 cellSpacing = 3
-offset = 161
+offset = 198
 padding = 10
 
 # look at box design - get template - fill in data - place in image

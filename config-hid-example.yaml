@@ -1,0 +1,25 @@
+location:
+  lat: 
+  long: 
+
+sources:
+  - name:
+    apikey:
+    url: 
+
+boxes:
+  - label:
+    type: 
+    source: 
+    values:
+      - path: 
+        prefix:
+        suffix:
+        converter:
+      - path:
+        prefix:
+        suffix:
+        converter:
+    centre:
+      upper: 
+      lower: 
