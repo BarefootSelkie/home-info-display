@@ -234,7 +234,7 @@ for box in config["boxes"]:
 
     if "type" in box and box["type"] == "weathericon":
         boxWeatherIcon(box, position, values)
-    elif box['label'] is not None:
+    elif box['title'] is not None:
         if len(values) > 1:
             boxTitledDual(box, position, values)
         else:
