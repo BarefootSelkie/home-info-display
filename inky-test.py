@@ -194,7 +194,7 @@ def boxTitledDual(box, position, values):
     image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
-def boxDual(box, position):
+def boxDual(box, position, values):
     image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
     image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
