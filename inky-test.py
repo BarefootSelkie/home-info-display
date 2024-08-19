@@ -130,7 +130,7 @@ for source in config["sources"]:
 
     try:
         r = requests.get(url, headers=headers)
-        dataSources[source["name"]] = r.text
+        dataSources[source["name"]] = json.loads(r.text)
     except Exception as e:
         logging.warning(e)
 
@@ -219,8 +219,9 @@ def boxDual(box, position, values):
 
 def getValue(value):
     jsonpath_expr = parse(value["path"])
-    output = jsonpath_expr.find(dataSources[value["source"]])[0]
-    
+    output = jsonpath_expr.find(dataSources[value["source"]])[0].value
+    output = str(output)
+
     if "converter" in value and value["converter"] is not None:
         output = converters[value["converter"]](output)
 
