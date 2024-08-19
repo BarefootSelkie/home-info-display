@@ -19,6 +19,7 @@ except:
 
 weather = "blank"
 river = "blank"
+homeass = "blank"
 
 try:
     r = requests.get("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" + str(config["location"]["lat"]) + "%2C" + str(config["location"]["long"]) + "/today?unitGroup=metric&include=remote%2Cobs%2Cfcst%2Ccurrent%2Calerts%2Cevents&key=" + config["apikeys"]["weather"] + "&contentType=json")
@@ -26,7 +27,7 @@ try:
 except Exception as e:
     logging.warning(e)
 
-with open("./weather.json", "w") as weatherFile:
+with open("./requests/weather.json", "w") as weatherFile:
     weatherFile.write(json.dumps(weather))
 
 try:
@@ -35,5 +36,18 @@ try:
 except Exception as e:
     logging.warning(e)
 
-with open("./river.json", "w") as riverFile:
+with open("./requests/river.json", "w") as riverFile:
     riverFile.write(json.dumps(river))
+
+try:
+    headers = {
+        "authorization": "Bearer " + config["apikeys"]["homeassistant"],
+        "content-type": "application/json" 
+    }
+    r = requests.get("http://192.168.1.189:8123/api/states", headers = headers)
+    homeass = json.loads(r.text)
+except Exception as e:
+    logging.warning(e)
+
+with open("./requests/homeass.json", "w") as homeassFile:
+    homeassFile.write(json.dumps(homeass))
