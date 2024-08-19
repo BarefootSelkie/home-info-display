@@ -219,7 +219,7 @@ def boxDual(box, position, values):
 
 def getValue(value):
     jsonpath_expr = parse(value["path"])
-    output = jsonpath_expr.find(dataSources)[0]
+    output = jsonpath_expr.find(dataSources[value["source"]])[0]
     
     if "converter" in value and value["converter"] is not None:
         output = converters[value["converter"]](output)
