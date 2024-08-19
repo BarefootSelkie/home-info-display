@@ -1,6 +1,10 @@
 location:
   lat: 
-  long: 
+  long:
+
+sleep:
+  start: 22:00
+  end: 8:00
 
 sources:
   - name:
