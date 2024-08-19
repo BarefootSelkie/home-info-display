@@ -8,7 +8,7 @@ import yaml
 import logging
 import requests
 import json
-import objectpath
+from jsonpath_ng import jsonpath, parse
 
 # Logging setup
 logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
@@ -130,7 +130,7 @@ for source in config["sources"]:
 
     try:
         r = requests.get(url, headers=headers)
-        dataSources[source["name"]] = json.loads(r.text)
+        dataSources[source["name"]] = r.text
     except Exception as e:
         logging.warning(e)
 
@@ -218,7 +218,8 @@ def boxDual(box, position, values):
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def getValue(value):
-    output = str(objectpath.Tree(dataSources).execute(value["path"]))
+    jsonpath_expr = parse(value["path"])
+    output = jsonpath_expr.find(dataSources)[0]
     
     if "converter" in value and value["converter"] is not None:
         output = converters[value["converter"]](output)
