@@ -10,12 +10,12 @@ sources:
   - name:
     apikey:
     url: 
+    headers:
 
 boxes:
   - label:
     type: 
     colour: 
-    source: 
     values:
       - path: 
         prefix:

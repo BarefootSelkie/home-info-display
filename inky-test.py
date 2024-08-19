@@ -109,14 +109,30 @@ except:
     # logging.critical("Settings file missing")
     exit()
 
-# Load weather data
-weather = None
-try:
-    r = requests.get("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" + str(config["location"]["lat"]) + "%2C" + str(config["location"]["long"]) + "/today?unitGroup=metric&include=remote%2Cobs%2Cfcst%2Ccurrent%2Calerts%2Cevents&key=" + config["apikeys"]["weather"] + "&contentType=json")
-    weather = json.loads(r.text)
-except Exception as e:
-    logging.warning(e)
-    logging.warning(r.text)
+# Load in data
+dataSources = {}
+
+for source in config["sources"]:
+    url = source["url"].format(
+        apikey = source["apikey"], 
+        lat=str(config["location"]["lat"]), 
+        long=str(config["location"]["long"]) 
+    )
+
+    headers = {}
+    if "headers" in source:
+        for key in source["headers"].keys():
+            headers[key] = source["headers"][key].format(
+                apikey = source["apikey"], 
+                lat=str(config["location"]["lat"]), 
+                long=str(config["location"]["long"]) 
+            )
+
+    try:
+        r = requests.get(url, headers=headers)
+        dataSources[source["name"]] = json.loads(r.text)
+    except Exception as e:
+        logging.warning(e)
 
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
@@ -202,7 +218,7 @@ def boxDual(box, position, values):
     image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def getValue(value):
-    output = str(objectpath.Tree(weather).execute(value["path"]))
+    output = str(objectpath.Tree(dataSources).execute(value["path"]))
     
     if "converter" in value and value["converter"] is not None:
         output = converters[value["converter"]](output)
