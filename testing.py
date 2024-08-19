@@ -21,8 +21,43 @@ weather = "blank"
 river = "blank"
 homeass = "blank"
 
+for source in config["sources"]:
+    url = source["url"].format(
+        apikey = source["apikey"], 
+        lat=str(config["location"]["lat"]), 
+        long=str(config["location"]["long"]) 
+    )
+
+    headers = {}
+    if "headers" in source:
+        for key in source["headers"].keys():
+            headers[key] = source["headers"][key].format(
+                apikey = source["apikey"], 
+                lat=str(config["location"]["lat"]), 
+                long=str(config["location"]["long"]) 
+            )
+
+    try:
+        r = requests.get(url, headers=headers)
+        data = json.loads(r.text)
+        with open("./requests/" + source["name"] + ".json", "w") as outputFile:
+            outputFile.write(json.dumps(data))
+    except Exception as e:
+        logging.warning(e)
+
+
+"""     r = requests.get(url, headers=headers)
+    
 try:
-    r = requests.get("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" + str(config["location"]["lat"]) + "%2C" + str(config["location"]["long"]) + "/today?unitGroup=metric&include=remote%2Cobs%2Cfcst%2Ccurrent%2Calerts%2Cevents&key=" + config["apikeys"]["weather"] + "&contentType=json")
+    source = {}
+    for item in config["sources"]:
+        if item["name"] == "visualcrossing":
+            source = item
+    print("fred")
+    
+    print(url)
+    print(url)
+    r = requests.get(url)
     weather = json.loads(r.text)
 except Exception as e:
     logging.warning(e)
@@ -50,4 +85,4 @@ except Exception as e:
     logging.warning(e)
 
 with open("./requests/homeass.json", "w") as homeassFile:
-    homeassFile.write(json.dumps(homeass))
+    homeassFile.write(json.dumps(homeass)) """
