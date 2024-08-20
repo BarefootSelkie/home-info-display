@@ -8,7 +8,7 @@ import yaml
 import logging
 import requests
 import json
-from jsonpath_ng import jsonpath, parse
+from jsonpath_ng.ext import parse
 
 # Logging setup
 logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
