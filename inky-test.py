@@ -226,7 +226,10 @@ def getValue(value):
         output = converters[value["converter"]](output)
 
     if "round" in value and value["round"]:
-        output = str(round(float(output), value["round"]))
+        if value["round"] == 0:
+            output = str(int(float(output)))
+        else:
+            output = str(round(float(output), value["round"]))
 
     if "prefix" in value and value["prefix"] is not None:
         output = value["prefix"] + output
