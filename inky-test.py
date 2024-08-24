@@ -225,7 +225,7 @@ def getValue(value):
     if "converter" in value and value["converter"] is not None:
         output = converters[value["converter"]](output)
 
-    if "round" in value and value["round"]:
+    if "round" in value:
         if value["round"] == 0:
             output = str(int(float(output)))
         else:
