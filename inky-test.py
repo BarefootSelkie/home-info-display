@@ -54,23 +54,21 @@ anchorNextUp = (anchorCalendar[0] + widthCalendar + cellSpacing,0)
 widthNextUp = 318
 heightNextUp = 158
 
-# Sizing for Moth
-anchorMoth = (0,anchorCalendar[1] + heightCalendar + cellSpacing)
-widthMoth = 480
-heightMoth = 31
-
 # Sizing for WhoMe
-anchorWhoMe = (0, anchorMoth[1] + heightMoth + cellSpacing)
+anchorWhoMe = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
 widthWhoMe = 480
 heightWhoMe = 118
 
 # Sizing for data grid
 anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
 rowWidth = 3
-width = 158
-height = 118
-offset = 198
+boxWidth = 158
+boxHeight = 118
 
+# Sizing for Moth
+anchorMoth = (0,anchorDataGrid[1] + ((boxHeight + cellSpacing) * 4))
+widthMoth = 480
+heightMoth = 31
 
 ### State variables ###
 
@@ -187,28 +185,28 @@ def boxWeatherIcon(box, position, values):
   iconWeather = Image.open(fileIcon)
   iconWeather = ImageOps.invert(iconWeather)
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-  image.bitmap((((width / 2) - 48) + position[0][0], ((height / 2) - 48) + position[0][1]), iconWeather)
+  image.bitmap((((boxWidth / 2) - 48) + position[0][0], ((boxHeight / 2) - 48) + position[0][1]), iconWeather)
 
 # standard boxes
 def boxTitledBig(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
   image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
 
 def boxBig(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
 
 def boxTitledDual(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
   image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
-  image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (3*boxHeight / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def boxDual(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-  image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
-  image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 4) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (3*boxHeight / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def getValue(value):
   jsonpath_expr = parse(value["path"])
@@ -235,10 +233,10 @@ def getValue(value):
 def getBoxPosition(index):
   row = index // rowWidth
   col = index % rowWidth
-  stx = ((width + cellSpacing) * col) + anchorDataGrid[0]
-  sty = ((height + cellSpacing) * row) + anchorDataGrid[1]
-  spx = stx + width - 1
-  spy = sty + height - 1
+  stx = ((boxWidth + cellSpacing) * col) + anchorDataGrid[0]
+  sty = ((boxHeight + cellSpacing) * row) + anchorDataGrid[1]
+  spx = stx + boxWidth - 1
+  spy = sty + boxHeight - 1
 
   return [(stx,sty),(spx,spy)]
 
