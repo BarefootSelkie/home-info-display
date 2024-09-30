@@ -312,7 +312,7 @@ def drawDataGrid(image):
 
 def drawWhoMe(image):
   image.rounded_rectangle([anchorWhoMe,(anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1] + heightWhoMe)], radius=12, fill=None, outline=colour["blue"], width=4)
-
+  print(dataWhoMe)
   fronterName = dataWhoMe["members"][0]["name"]
 
   image.text((anchorWhoMe[0] + (widthWhoMe // 2), anchorWhoMe[1] + (heightWhoMe // 2)), fronterName, colour["blue"], font=fontCalBg, anchor="mm")
