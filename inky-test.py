@@ -57,7 +57,7 @@ heightNextUp = 158
 # Sizing for Moth
 anchorMoth = (0,anchorCalendar[1] + heightCalendar + cellSpacing)
 widthMoth = 480
-heightMoth = 34
+heightMoth = 31
 
 # Sizing for WhoMe
 anchorWhoMe = (0, anchorMoth[1] + heightMoth + padding)
