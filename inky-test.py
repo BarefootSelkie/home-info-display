@@ -311,7 +311,7 @@ image = ImageDraw.Draw(display)
 ### Main code
 
 drawCalendar(image)
-drawTrips(image)
+drawNextUp(image)
 drawMoth(image)
 # drawWhoMe(image)
 drawDataGrid(image)
