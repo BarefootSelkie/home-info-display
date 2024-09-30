@@ -60,12 +60,12 @@ widthMoth = 480
 heightMoth = 31
 
 # Sizing for WhoMe
-anchorWhoMe = (0, anchorMoth[1] + heightMoth + padding)
+anchorWhoMe = (0, anchorMoth[1] + heightMoth + cellSpacing)
 widthWhoMe = 480
 heightWhoMe = 118
 
 # Sizing for data grid
-anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + padding)
+anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
 rowWidth = 3
 width = 158
 height = 118
