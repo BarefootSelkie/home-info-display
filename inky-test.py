@@ -55,7 +55,7 @@ widthNextUp = 318
 heightNextUp = 158
 
 # Sizing for Moth
-anchorMoth = (0,anchorCalendar[1] + cellSpacing)
+anchorMoth = (0,anchorCalendar[1] + heightCalendar + cellSpacing)
 widthMoth = 480
 heightMoth = 34
 
@@ -176,7 +176,7 @@ def drawNextUp(image):
 def drawMoth(image):
   # Draw a text box below the date and next trip
   messageOfHour = "So long and thanks for all the fish"
-  image.rounded_rectangle([anchorMoth,(anchorMoth[0]+widthMoth,anchorMoth[1]+height)], radius=12, fill=None, outline=colour["blue"], width=4)
+  image.rounded_rectangle([anchorMoth,(anchorMoth[0]+widthMoth,anchorMoth[1]+heightMoth)], radius=12, fill=None, outline=colour["blue"], width=4)
   image.text((anchorMoth[0] + (widthMoth//2), anchorMoth[1] + (heightMoth//2)), messageOfHour, colour["blue"], font=fontGridLabel, anchor="mm")
 
 # edge case boxes
