@@ -78,7 +78,7 @@ def toCompassPoint(degrees):
 
 def msToKmh(ms):
   kmh = ms * 3.6
-  return kmh  
+  return kmh
 
 # given an input text string, return a list of strings that don't exceed a certain pixel width
 def wrap(image, text, wrapWidth, font):
@@ -101,7 +101,7 @@ def wrap(image, text, wrapWidth, font):
         # if so, add the current line to the output list and start a new line
         output.append(currentLine)
         currentLine = ""
-    
+
   currentLine = currentLine + currentWord
   output.append(currentLine)
 
@@ -209,14 +209,14 @@ def getBoxPosition(index):
   stx = (width + cellSpacing) * col
   sty = ((height + cellSpacing) * row) + offset
   spx = stx + width - 1
-  spy = sty + height - 1 
-  
+  spy = sty + height - 1
+
   return [(stx,sty),(spx,spy)]
 
 def drawDataGrid(image):
   index = 0
   for box in config["boxes"]:
-    position = getBoxPosition(index)  
+    position = getBoxPosition(index)
 
     values = []
     if "values" in box:
@@ -254,18 +254,18 @@ dataSources = {}
 
 for source in config["sources"]:
   url = source["url"].format(
-    apikey = source["apikey"], 
-    lat=str(config["location"]["lat"]), 
-    long=str(config["location"]["long"]) 
+    apikey = source["apikey"],
+    lat=str(config["location"]["lat"]),
+    long=str(config["location"]["long"])
   )
 
   headers = {}
   if "headers" in source:
     for key in source["headers"].keys():
       headers[key] = source["headers"][key].format(
-        apikey = source["apikey"], 
-        lat=str(config["location"]["lat"]), 
-        long=str(config["location"]["long"]) 
+        apikey = source["apikey"],
+        lat=str(config["location"]["lat"]),
+        long=str(config["location"]["long"])
       )
 
   try:
