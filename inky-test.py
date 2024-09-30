@@ -40,11 +40,28 @@ fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
 fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
 fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 
+# Sizing Constants
+cellSpacing = 3
+
+# Sizing for calendar
+anchorCalendar = (0,0)
+widthCalendar = 158
+heightCalendar = 158
+
+# Sizing for next up
+anchorNextUp = []
+
+# Sizing for Moth
+anchorMoth = (0,161)
+
+# Sizing for WhoMe
+anchorWhoMe = []
+
 # Sizing for data grid
+anchorDataGrid = []
 rowWidth = 3
 width = 158
 height = 118
-cellSpacing = 3
 offset = 198
 padding = 10
 
@@ -120,11 +137,11 @@ def drawCalendar(image):
   dateDay = datetime.date.today().strftime('%a')
   dateMonth = datetime.date.today().strftime('%b')
 
-  image.rounded_rectangle([(0,0),(157,157)], radius=12, fill=None, outline=colour["red"], width=4)
-  image.rounded_rectangle([(0,0),(157,41)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
-  image.text((79,20), dateMonth, colour["white"], font=fontCalSm, anchor="mm")
-  image.text((79,79), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
-  image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
+  image.rounded_rectangle([anchorCalendar,(anchorCalendar[0] + widthCalendar, anchorCalendar[1] + heightCalendar)], radius=12, fill=None, outline=colour["red"], width=4)
+  image.rounded_rectangle([anchorCalendar,(anchorCalendar[0] + widthCalendar, anchorCalendar[1] + 42)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)), anchorCalendar[0] + 21), dateMonth, colour["white"], font=fontCalSm, anchor="mm")
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)), anchorCalendar[0] + 80), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)),anchorCalendar[0] + 137), dateDay, colour["black"], font=fontCalSm, anchor="mm")
 
 def drawTrips(image):
   # Draw the next trip box next to the current date
@@ -245,6 +262,10 @@ def drawDataGrid(image):
 
     index = index + 1
 
+def drawWhoMe(image):
+  # image.rounded_rectangle([(0,196),(479,195)], radius=12, fill=None, outline=colour["blue"], width=4)
+  # image.text((239, 161+17), "test", colour["blue"], font=fontGridLabel, anchor="mm")
+
 #### Initialisation
 
 # Load trips
@@ -290,6 +311,7 @@ image = ImageDraw.Draw(display)
 drawCalendar(image)
 drawTrips(image)
 drawMoth(image)
+drawWhoMe(image)
 drawDataGrid(image)
 
 inky.set_image(display.rotate(90, expand=True))
