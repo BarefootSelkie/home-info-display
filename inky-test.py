@@ -235,7 +235,7 @@ def getValue(value):
 def getBoxPosition(index):
   row = index // rowWidth
   col = index % rowWidth
-  stx = (width + cellSpacing) * col + anchorDataGrid[0]
+  stx = ((width + cellSpacing) * col) + anchorDataGrid[0]
   sty = ((height + cellSpacing) * row) + anchorDataGrid[1]
   spx = stx + width - 1
   spy = sty + height - 1
