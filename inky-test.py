@@ -84,7 +84,8 @@ heightMoth = 31
 ### State variables ###
 
 dataSources = {}
-trips = {}
+dataWhoMe = {}
+dataTrips = {}
 
 
 ### Converter functions ###
@@ -95,6 +96,39 @@ converters = {
 }
 
 ### Functions ###
+
+# Data requests
+ 
+# For each entry in sources make api request and put returned json in dataSources
+def requestSources():
+  for source in config["sources"]:
+    url = source["url"].format(
+      apikey = source["apikey"],
+      lat=str(config["location"]["lat"]),
+      long=str(config["location"]["long"])
+    )
+
+    headers = {}
+    if "headers" in source:
+      for key in source["headers"].keys():
+        headers[key] = source["headers"][key].format(
+          apikey = source["apikey"],
+          lat=str(config["location"]["lat"]),
+          long=str(config["location"]["long"])
+        )
+
+    try:
+      r = requests.get(url, headers=headers)
+      dataSources[source["name"]] = json.loads(r.text)
+    except Exception as e:
+      logging.warning(e)
+
+def requestWhoMe():
+  try:
+    r = requests.get(config["whome"]["server"])
+    dataWhoMe = json.loads(r.text)
+  except Exception as e:
+    logging.warning(e)
 
 def toCompassPoint(degrees):
   if degrees < 22.5:
@@ -164,7 +198,7 @@ def drawNextUp(image):
 
   # Get trips that haven't happened yet
   upcomingTrips = []
-  for trip in trips["trips"]:
+  for trip in dataTrips["trips"]:
     if datetime.date.fromisoformat(str(trip["date"])) > datetime.date.today():
       upcomingTrips.append(trip)
 
@@ -279,43 +313,19 @@ def drawDataGrid(image):
 def drawWhoMe(image):
   image.rounded_rectangle([anchorWhoMe,(anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1] + heightWhoMe)], radius=12, fill=None, outline=colour["blue"], width=4)
 
-  fronterName = dataSources[""]
+  fronterName = dataWhoMe["members"][0]["name"]
 
-  image.text((anchorWhoMe[0] + (widthWhoMe // 2), anchorWhoMe[1] + (heightWhoMe // 2)), "TestyText", colour["blue"], font=fontCalBg, anchor="mm")
+  image.text((anchorWhoMe[0] + (widthWhoMe // 2), anchorWhoMe[1] + (heightWhoMe // 2)), fronterName, colour["blue"], font=fontCalBg, anchor="mm")
 
 #### Initialisation
 
 # Load trips
 try:
   with open("./trips.yaml", "r") as read_file:
-    trips = yaml.safe_load(read_file)
+    dataTrips = yaml.safe_load(read_file)
 except:
-  # logging.critical("Settings file missing")
+  logging.critical("Trips file missing")
   exit()
-
-# Load in data
-
-for source in config["sources"]:
-  url = source["url"].format(
-    apikey = source["apikey"],
-    lat=str(config["location"]["lat"]),
-    long=str(config["location"]["long"])
-  )
-
-  headers = {}
-  if "headers" in source:
-    for key in source["headers"].keys():
-      headers[key] = source["headers"][key].format(
-        apikey = source["apikey"],
-        lat=str(config["location"]["lat"]),
-        long=str(config["location"]["long"])
-      )
-
-  try:
-    r = requests.get(url, headers=headers)
-    dataSources[source["name"]] = json.loads(r.text)
-  except Exception as e:
-    logging.warning(e)
 
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
@@ -325,6 +335,8 @@ image = ImageDraw.Draw(display)
 
 ### Main code
 
+requestSources()
+requestWhoMe()
 drawCalendar(image)
 drawNextUp(image)
 drawMoth(image)
