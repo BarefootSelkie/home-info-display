@@ -42,6 +42,7 @@ fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 
 # Sizing Constants
 cellSpacing = 3
+padding = 10
 
 # Sizing for calendar
 anchorCalendar = (0,0)
@@ -49,7 +50,9 @@ widthCalendar = 158
 heightCalendar = 158
 
 # Sizing for next up
-anchorNextUp = []
+anchorNextUp = (anchorCalendar[0] + widthCalendar + cellSpacing,0)
+widthNextUp = 318
+heightNextUp = 158
 
 # Sizing for Moth
 anchorMoth = (0,161)
@@ -63,7 +66,6 @@ rowWidth = 3
 width = 158
 height = 118
 offset = 198
-padding = 10
 
 
 ### State variables ###
@@ -131,8 +133,8 @@ def wrap(image, text, wrapWidth, font):
 
   return output
 
+# Draw the calendar square in top left of screen
 def drawCalendar(image):
-  # Draw the calendar square in top left of screen
   dateNumber = datetime.date.today().strftime('%d')
   dateDay = datetime.date.today().strftime('%a')
   dateMonth = datetime.date.today().strftime('%b')
@@ -143,9 +145,9 @@ def drawCalendar(image):
   image.text(((anchorCalendar[0] + (widthCalendar // 2)), anchorCalendar[0] + 80), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
   image.text(((anchorCalendar[0] + (widthCalendar // 2)),anchorCalendar[0] + 137), dateDay, colour["black"], font=fontCalSm, anchor="mm")
 
-def drawTrips(image):
+def drawNextUp(image):
   # Draw the next trip box next to the current date
-  image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colour["black"], width=4)
+  image.rounded_rectangle([anchorNextUp,(anchorNextUp[0] + widthNextUp,anchorNextUp[1] + heightNextUp)], radius=12, fill=None, outline=colour["black"], width=4)
 
   # Get trips that haven't happened yet
   upcomingTrips = []
@@ -162,12 +164,12 @@ def drawTrips(image):
     todayDate = datetime.date.today()
     daysRemaining = (nextTripDate - todayDate).days
 
-    lines = wrap(image, nextTrip["destination"], 294, fontCalSm)
+    lines = wrap(image, nextTrip["destination"], (widthNextUp - (padding*2)), fontCalSm)
 
-    image.text((170,28), lines[0], colour["black"], font=fontCalSm, anchor="lm")
+    image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 16), lines[0], colour["black"], font=fontCalSm, anchor="lm")
     if len(lines) > 1:
-      image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
-    image.text((320,108), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
+      image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 32 + 16), lines[1], colour["black"], font=fontCalSm, anchor="lm")
+    image.text((anchorNextUp[0] + (widthNextUp // 2), anchorNextUp[1] + padding + 32 + 32 + (64/2)), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 def drawMoth(image):
   # Draw a text box below the date and next trip
