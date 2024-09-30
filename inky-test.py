@@ -314,7 +314,7 @@ image = ImageDraw.Draw(display)
 drawCalendar(image)
 drawNextUp(image)
 drawMoth(image)
-# drawWhoMe(image)
+drawWhoMe(image)
 drawDataGrid(image)
 
 inky.set_image(display.rotate(90, expand=True))
