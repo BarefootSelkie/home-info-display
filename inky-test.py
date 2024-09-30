@@ -48,6 +48,13 @@ cellSpacing = 3
 offset = 198
 padding = 10
 
+
+### State variables ###
+
+dataSources = {}
+trips = {}
+
+
 ### Converter functions ###
 
 converters = {
@@ -240,7 +247,6 @@ def drawDataGrid(image):
 
 #### Initialisation
 
-
 # Load trips
 try:
   with open("./trips.yaml", "r") as read_file:
@@ -250,7 +256,6 @@ except:
   exit()
 
 # Load in data
-dataSources = {}
 
 for source in config["sources"]:
   url = source["url"].format(
@@ -286,10 +291,6 @@ drawCalendar(image)
 drawTrips(image)
 drawMoth(image)
 drawDataGrid(image)
-
-
-
-
 
 inky.set_image(display.rotate(90, expand=True))
 inky.show()
