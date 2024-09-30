@@ -8,12 +8,22 @@ import yaml
 import logging
 import requests
 import json
+import argparse
 from jsonpath_ng.ext import parse
 
-# Logging setup
-logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
+# Arguments, Logging, Settings
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--debug", action="store_true", help="Enable debug level logging")
+args = parser.parse_args()
 
-# Load settings
+if args.debug:
+  # If arg -d or --debug passed in endale debug logging
+  logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.DEBUG)
+else:
+  # Otherwise use warn logging
+  logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
+
+# Load config file
 try:
   with open("./config-hid.yaml", "r") as read_file:
     config = yaml.safe_load(read_file)
@@ -33,6 +43,7 @@ colour = {
   "orange": 6
   }
 
+# Fonts
 fontGridSingle = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
 fontGridDual = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
 fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
@@ -267,6 +278,9 @@ def drawDataGrid(image):
 
 def drawWhoMe(image):
   image.rounded_rectangle([anchorWhoMe,(anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1] + heightWhoMe)], radius=12, fill=None, outline=colour["blue"], width=4)
+
+  fronterName = dataSources[""]
+
   image.text((anchorWhoMe[0] + (widthWhoMe // 2), anchorWhoMe[1] + (heightWhoMe // 2)), "TestyText", colour["blue"], font=fontCalBg, anchor="mm")
 
 #### Initialisation
