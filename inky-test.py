@@ -126,6 +126,7 @@ def requestSources():
 def requestWhoMe():
   try:
     r = requests.get(config["whome"]["server"])
+    print(r.text)
     dataWhoMe = json.loads(r.text)
   except Exception as e:
     logging.warning(e)
