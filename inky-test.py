@@ -262,7 +262,7 @@ def drawDataGrid(image):
 
     index = index + 1
 
-def drawWhoMe(image):
+# def drawWhoMe(image):
   # image.rounded_rectangle([(0,196),(479,195)], radius=12, fill=None, outline=colour["blue"], width=4)
   # image.text((239, 161+17), "test", colour["blue"], font=fontGridLabel, anchor="mm")
 
@@ -311,7 +311,7 @@ image = ImageDraw.Draw(display)
 drawCalendar(image)
 drawTrips(image)
 drawMoth(image)
-drawWhoMe(image)
+# drawWhoMe(image)
 drawDataGrid(image)
 
 inky.set_image(display.rotate(90, expand=True))
