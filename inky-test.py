@@ -60,10 +60,12 @@ widthMoth = 480
 heightMoth = 34
 
 # Sizing for WhoMe
-anchorWhoMe = []
+anchorWhoMe = (0, anchorMoth[1] + heightMoth + padding)
+widthWhoMe = 480
+heightWhoMe = 118
 
 # Sizing for data grid
-anchorDataGrid = []
+anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + padding)
 rowWidth = 3
 width = 158
 height = 118
@@ -233,8 +235,8 @@ def getValue(value):
 def getBoxPosition(index):
   row = index // rowWidth
   col = index % rowWidth
-  stx = (width + cellSpacing) * col
-  sty = ((height + cellSpacing) * row) + offset
+  stx = (width + cellSpacing) * col + anchorDataGrid[0]
+  sty = ((height + cellSpacing) * row) + anchorDataGrid[1]
   spx = stx + width - 1
   spy = sty + height - 1
 
