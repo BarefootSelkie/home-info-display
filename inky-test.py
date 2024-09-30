@@ -265,9 +265,9 @@ def drawDataGrid(image):
 
     index = index + 1
 
-# def drawWhoMe(image):
-  # image.rounded_rectangle([(0,196),(479,195)], radius=12, fill=None, outline=colour["blue"], width=4)
-  # image.text((239, 161+17), "test", colour["blue"], font=fontGridLabel, anchor="mm")
+def drawWhoMe(image):
+  image.rounded_rectangle([anchorWhoMe,(anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1] + heightWhoMe)], radius=12, fill=None, outline=colour["blue"], width=4)
+  image.text((anchorWhoMe[0] + (widthWhoMe // 2), anchorWhoMe[1] + (heightWhoMe // 2)), "TestyText", colour["blue"], font=fontCalBg, anchor="mm")
 
 #### Initialisation
 
