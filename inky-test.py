@@ -130,7 +130,7 @@ def requestNextUp():
   end = datetime.datetime.now(tz = datetime.timezone.utc) + datetime.timedelta(weeks=52)
   queryurl = config["nextup"]["url"] + "?start=" + start.isoformat + "&end=" + end.isoformat
   print(queryurl)
-  try:å
+  try:
     r = requests.get(queryurl, headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
     print(r)
     print(r.reason)
