@@ -86,7 +86,6 @@ heightMoth = 31
 dataSources = {}
 dataNextUp = {}
 dataWhoMe = {}
-dataTrips = {}
 
 
 ### Converter functions ###
@@ -211,25 +210,37 @@ def drawNextUp(image):
   image.rounded_rectangle([anchorNextUp,(anchorNextUp[0] + widthNextUp,anchorNextUp[1] + heightNextUp)], radius=12, fill=None, outline=colour["black"], width=4)
 
   # Get trips that haven't happened yet
-  upcomingTrips = []
-  for trip in dataTrips["trips"]:
-    if datetime.date.fromisoformat(str(trip["date"])) > datetime.date.today():
-      upcomingTrips.append(trip)
+  nextUp = []
+  for event in dataNextUp:
+    if datetime.date.fromisoformat(str(event["start"]["date"])) > datetime.date.today():
+      nextUp.append(event)
 
   # Sort the list
-  upcomingTrips.sort(key=lambda trip: trip["date"], reverse=False)
+  nextUp.sort(key=lambda event: event["start"]["date"], reverse=False)
 
-  if len(upcomingTrips) > 0:
-    nextTrip = upcomingTrips[0]
-    nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
+  if len(nextUp) > 0:
+    # If there are events in the list get the first one
+    nextEvent = nextUp[0]
+
+    # extract data into indivdual varibles
+    nextEventDate = datetime.date.fromisoformat(str(nextEvent["start"]["date"]))
+    nextEventName = nextEvent["summary"]
     todayDate = datetime.date.today()
-    daysRemaining = (nextTripDate - todayDate).days
 
-    lines = wrap(image, nextTrip["destination"], (widthNextUp - (padding*2)), fontCalSm)
+    # work out how many days until the next event
+    daysRemaining = (nextEventDate - todayDate).days
 
+    # wordwarp the event name gives back a list
+    lines = wrap(image, nextEventName, (widthNextUp - (padding*2)), fontCalSm)
+
+    # draw the first line onto the display
     image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 16), lines[0], colour["black"], font=fontCalSm, anchor="lm")
+    
+    # if there is more than one line draw the second, but end there as only 2 lines available
     if len(lines) > 1:
       image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 32 + 16), lines[1], colour["black"], font=fontCalSm, anchor="lm")
+    
+    # draw the days remaining below the text
     image.text((anchorNextUp[0] + (widthNextUp // 2), anchorNextUp[1] + padding + 32 + 32 + (64/2)), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 def drawMoth(image):
@@ -344,7 +355,7 @@ image = ImageDraw.Draw(display)
 
 ### Main code
 drawCalendar(image)
-##drawNextUp(image)
+drawNextUp(image)
 drawMoth(image)
 drawWhoMe(image)
 drawDataGrid(image)
