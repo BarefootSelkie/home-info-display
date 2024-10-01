@@ -126,8 +126,12 @@ def requestSources():
 
 def requestNextUp():
   global dataNextUp
-  try:
-    r = requests.get(config["nextup"]["url"], headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
+  start = datetime.datetime.now(tz = datetime.timezone.utc) - datetime.timedelta(weeks=4)
+  end = datetime.datetime.now(tz = datetime.timezone.utc) + datetime.timedelta(weeks=52)
+  queryurl = config["nextup"]["url"] + "?start=" + start.isoformat + "&end=" + end.isoformat
+  print(queryurl)
+  try:å
+    r = requests.get(queryurl, headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
     print(r)
     print(r.reason)
     dataNextUp = json.loads(r.text)
