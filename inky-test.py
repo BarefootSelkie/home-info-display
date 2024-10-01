@@ -128,7 +128,7 @@ def requestNextUp():
   global dataNextUp
   start = datetime.datetime.now(tz = datetime.timezone.utc) - datetime.timedelta(weeks=4)
   end = datetime.datetime.now(tz = datetime.timezone.utc) + datetime.timedelta(weeks=52)
-  queryurl = config["nextup"]["url"] + "?start=" + start.isoformat() + "&end=" + end.isoformat()
+  queryurl = config["nextup"]["url"] + "?start=" + start.isoformat(timespec = "milliseconds") + "&end=" + end.isoformat(timespec = "milliseconds")
   print(queryurl)
   try:
     r = requests.get(queryurl, headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
