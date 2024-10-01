@@ -129,13 +129,10 @@ def requestNextUp():
   start = datetime.datetime.now(tz = datetime.timezone.utc) - datetime.timedelta(weeks=4)
   end = datetime.datetime.now(tz = datetime.timezone.utc) + datetime.timedelta(weeks=52)
   queryurl = config["nextup"]["url"] + "?start=" + start.strftime("%Y-%m-%dT%H:%M:%S.000Z") + "&end=" + end.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-  print(queryurl)
+
   try:
     r = requests.get(queryurl, headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
-    print(r)
-    print(r.reason)
     dataNextUp = json.loads(r.text)
-    print(r.text)
   except Exception as e:
     logging.warning(e)
 
