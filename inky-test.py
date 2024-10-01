@@ -84,6 +84,7 @@ heightMoth = 31
 ### State variables ###
 
 dataSources = {}
+dataNextUp = {}
 dataWhoMe = {}
 dataTrips = {}
 
@@ -122,6 +123,15 @@ def requestSources():
       dataSources[source["name"]] = json.loads(r.text)
     except Exception as e:
       logging.warning(e)
+
+def requestNextUp():
+  global dataNextUp
+  try:
+    r = requests.get(config["nextup"]["url"], headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
+    dataNextUp = json.loads(r.text)
+    print(dataNextUp)
+  except Exception as e:
+    logging.warning(e)
 
 def requestWhoMe():
   global dataWhoMe
@@ -319,26 +329,18 @@ def drawWhoMe(image):
 
 #### Initialisation
 
-# Load trips
-try:
-  with open("./trips.yaml", "r") as read_file:
-    dataTrips = yaml.safe_load(read_file)
-except:
-  logging.critical("Trips file missing")
-  exit()
-
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-
 ### Main code
 
 requestSources()
+requestNextUp()
 requestWhoMe()
 drawCalendar(image)
-drawNextUp(image)
+##drawNextUp(image)
 drawMoth(image)
 drawWhoMe(image)
 drawDataGrid(image)
