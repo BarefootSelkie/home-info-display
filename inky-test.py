@@ -76,7 +76,7 @@ if config["whome"]["enabled"]:
   anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
   rowsDataGrid = 4
 else:
-  anchorDataGrid = (0, anchorCalendar[1] + heightWhoMe + cellSpacing)
+  anchorDataGrid = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
   rowsDataGrid = 5
 rowWidth = 3
 boxWidth = 158
