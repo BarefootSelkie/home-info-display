@@ -66,18 +66,24 @@ widthNextUp = 318
 heightNextUp = 158
 
 # Sizing for WhoMe
-anchorWhoMe = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
-widthWhoMe = 480
-heightWhoMe = 118
+if config["whome"]["enabled"]:
+  anchorWhoMe = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
+  widthWhoMe = 480
+  heightWhoMe = 118
 
 # Sizing for data grid
-anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
+if config["whome"]["enabled"]:
+  anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
+  rowsDataGrid = 4
+else:
+  anchorDataGrid = (0, anchorCalendar[1] + heightWhoMe + cellSpacing)
+  rowsDataGrid = 5
 rowWidth = 3
 boxWidth = 158
 boxHeight = 118
 
 # Sizing for Moth
-anchorMoth = (0,anchorDataGrid[1] + ((boxHeight + cellSpacing) * 4))
+anchorMoth = (0, anchorDataGrid[1] + ((boxHeight + cellSpacing) * rowsDataGrid))
 widthMoth = 480
 heightMoth = 31
 
@@ -346,7 +352,7 @@ def drawWhoMe(image):
 # Get data
 requestSources()
 requestNextUp()
-requestWhoMe()
+if config["whome"]["enabled"]: requestWhoMe()
 
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
@@ -357,7 +363,7 @@ image = ImageDraw.Draw(display)
 drawCalendar(image)
 drawNextUp(image)
 drawMoth(image)
-drawWhoMe(image)
+if config["whome"]["enabled"]: drawWhoMe(image)
 drawDataGrid(image)
 
 inky.set_image(display.rotate(90, expand=True))
