@@ -329,16 +329,17 @@ def drawWhoMe(image):
 
 #### Initialisation
 
+# Get data
+requestSources()
+requestNextUp()
+requestWhoMe()
+
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
 ### Main code
-
-requestSources()
-requestNextUp()
-requestWhoMe()
 drawCalendar(image)
 ##drawNextUp(image)
 drawMoth(image)
