@@ -129,6 +129,7 @@ def requestNextUp():
   try:
     r = requests.get(config["nextup"]["url"], headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
     print(r)
+    print(r.reason)
     dataNextUp = json.loads(r.text)
     print(r.text)
   except Exception as e:
