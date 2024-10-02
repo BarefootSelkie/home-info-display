@@ -349,8 +349,8 @@ def drawDataGrid(image):
     index = index + 1
 
 def drawWhoMe(image):
-  boxWhoMe(None, [anchorWhoMe[0], anchorWhoMe[1], anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1]  +  heightWhoMe], None)
-  
+  boxWhoMe(None, [[anchorWhoMe[0], anchorWhoMe[1]], [anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1]  +  heightWhoMe]], None)
+
 #### Initialisation
 
 # Get data
