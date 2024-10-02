@@ -65,19 +65,9 @@ anchorNextUp = (anchorCalendar[0] + widthCalendar + cellSpacing,0)
 widthNextUp = 318
 heightNextUp = 158
 
-# Sizing for WhoMe
-if config["whome"]["enabled"]:
-  anchorWhoMe = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
-  widthWhoMe = 480
-  heightWhoMe = 118
-
 # Sizing for data grid
-if config["whome"]["enabled"]:
-  anchorDataGrid = (0, anchorWhoMe[1] + heightWhoMe + cellSpacing)
-  rowsDataGrid = 4
-else:
-  anchorDataGrid = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
-  rowsDataGrid = 5
+anchorDataGrid = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
+rowsDataGrid = 5
 rowWidth = 3
 boxWidth = 158
 boxHeight = 118
@@ -333,8 +323,14 @@ def drawDataGrid(image):
       for value in box["values"]:
         values.append(getValue(value))
 
-    if "type" in box and box["type"] == "weathericon":
-      boxWeatherIcon(box, position, values)
+    if "type" in box:
+      match box["type"]:
+        case "weathericon":
+            boxWeatherIcon(box, position, values)
+        case "whome":
+            requestWhoMe()
+            boxWhoMe(None, position, None)
+
     elif box['title'] is not None:
       if len(values) > 1:
         boxTitledDual(box, position, values)
@@ -348,15 +344,11 @@ def drawDataGrid(image):
 
     index = index + 1
 
-def drawWhoMe(image):
-  boxWhoMe(None, [[anchorWhoMe[0], anchorWhoMe[1]], [anchorWhoMe[0] + widthWhoMe, anchorWhoMe[1]  +  heightWhoMe]], None)
-
 #### Initialisation
 
 # Get data
 requestSources()
 requestNextUp()
-if config["whome"]["enabled"]: requestWhoMe()
 
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
@@ -367,7 +359,6 @@ image = ImageDraw.Draw(display)
 drawCalendar(image)
 drawNextUp(image)
 drawMoth(image)
-if config["whome"]["enabled"]: drawWhoMe(image)
 drawDataGrid(image)
 
 inky.set_image(display.rotate(90, expand=True))
