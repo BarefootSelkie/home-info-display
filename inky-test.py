@@ -331,17 +331,17 @@ def drawDataGrid(image):
         case "whome":
             requestWhoMe()
             boxWhoMe(None, position, None)
-
-    elif box['title'] is not None:
-      if len(values) > 1:
-        boxTitledDual(box, position, values)
-      else:
-        boxTitledBig(box, position, values)
-    else:
-      if len(values) > 1:
-        boxDual(box, position, values)
-      else:
-        boxBig(box, position, values)
+        case _:
+          if box['title'] is not None:
+            if len(values) > 1:
+              boxTitledDual(box, position, values)
+            else:
+              boxTitledBig(box, position, values)
+          else:
+            if len(values) > 1:
+              boxDual(box, position, values)
+            else:
+              boxBig(box, position, values)
 
     index = index + 1
 
