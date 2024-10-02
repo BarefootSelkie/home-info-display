@@ -54,6 +54,8 @@ fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 fontWhoMeName = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(28))
 fontWhoMeTime = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 fontWhoMeSymbol = ImageFont.truetype("./ttf/NotoSansSymbols.ttf", int(28))
+fontWhoMeSymbol2 = ImageFont.truetype("./ttf/NotoSansSymbols2.ttf", int(28))
+
 
 # Sizing Constants
 cellSpacing = 3
@@ -264,7 +266,7 @@ def boxWhoMe(box, position, values):
 
   image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](dataWhoMe["members"][0]["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
 
-  image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["cardSuit"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
+  image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["cardSuit"], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
   image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
 
 # standard boxes
