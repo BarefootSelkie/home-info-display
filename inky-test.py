@@ -88,7 +88,8 @@ dataWhoMe = {}
 
 converters = {
   "windDirection": lambda degrees: toCompassPoint(float(degrees)),
-  "time": lambda time: time[:5]
+  "time": lambda time: time[:5],
+  "hhmm": lambda date: datetime.datetime.fromisoformat(date).strftime("%H:%M")
 }
 
 ### Functions ###
@@ -256,7 +257,7 @@ def boxWeatherIcon(box, position, values):
 def boxWhoMe(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
   image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(dataWhoMe["members"][0]["name"]), colour["black"], font=fontGridDual, anchor="ma")
-  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), dataWhoMe["members"][0]["lastIn"], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](dataWhoMe["members"][0]["lastIn"]), colour["black"], font=fontGridDual, anchor="mm")
   image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["cardSuit"], colour["black"], font=fontGridDual, anchor="mm")
   image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["elementName"], colour["black"], font=fontGridDual, anchor="mm")
 
