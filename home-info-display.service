@@ -1,0 +1,10 @@
+[Unit]
+Description=Home Info Display
+
+[Service]
+WorkingDirectory=/home/mxa/home-info-display
+ExecStart=/home/mxa/home-info-display/.venv/bin/python /home/mxa/home-info-display/hid.py
+
+[Install]
+WantedBy=multi-user.target
+Alias=home-info-display.service
