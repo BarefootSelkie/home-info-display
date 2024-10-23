@@ -1,13 +1,12 @@
 {
 	"folders": [
-		
 		{
 			"name": "home-info-display",
 			"path": "."
 		},
 		{
-			"name": "remote: home-info-display",
-			"uri": "sftp://mxa@192.168.1.68/home/mxa/home-info-display"
+			"name": "testing",
+			"uri": "sftp://mxa@hid1.lan/home/mxa/testing"
 		}
 	],
 	"settings": {}

@@ -8,12 +8,23 @@ import yaml
 import logging
 import requests
 import json
+import argparse
+import time
 from jsonpath_ng.ext import parse
 
-# Logging setup
-logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
+# Arguments, Logging, Settings
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--debug", action="store_true", help="Enable debug level logging")
+args = parser.parse_args()
 
-# Load settings
+if args.debug:
+  # If arg -d or --debug passed in endale debug logging
+  logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.DEBUG)
+else:
+  # Otherwise use warn logging
+  logging.basicConfig(format="%(asctime)s : %(message)s", filename="log-hid.log", encoding='utf-8', level=logging.WARN)
+
+# Load config file
 try:
   with open("./config-hid.yaml", "r") as read_file:
     config = yaml.safe_load(read_file)
@@ -33,6 +44,7 @@ colour = {
   "orange": 6
   }
 
+# Fonts
 fontGridSingle = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(44))
 fontGridDual = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(24))
 fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
@@ -40,29 +52,99 @@ fontGridLabel = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(18))
 fontCalBg = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(64))
 fontCalSm = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
 
-# Sizing for data grid
-rowWidth = 3
-width = 158
-height = 118
+fontWhoMeName = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(28))
+fontWhoMeTime = ImageFont.truetype("./ttf/Fredoka-Medium.ttf", int(32))
+fontWhoMeSymbol = ImageFont.truetype("./ttf/NotoSansSymbols.ttf", int(28))
+fontWhoMeSymbol2 = ImageFont.truetype("./ttf/NotoSansSymbols2.ttf", int(28))
+
+
+# Sizing Constants
 cellSpacing = 3
-offset = 198
 padding = 10
 
+# Sizing for calendar
+anchorCalendar = (0,0)
+widthCalendar = 158
+heightCalendar = 158
+
+# Sizing for next up
+anchorNextUp = (anchorCalendar[0] + widthCalendar + cellSpacing,0)
+widthNextUp = 318
+heightNextUp = 158
+
+# Sizing for data grid
+anchorDataGrid = (0, anchorCalendar[1] + heightCalendar + cellSpacing)
+rowsDataGrid = 5
+rowWidth = 3
+boxWidth = 158
+boxHeight = 118
+
+# Sizing for Moth
+anchorMoth = (0, anchorDataGrid[1] + ((boxHeight + cellSpacing) * rowsDataGrid))
+widthMoth = 480
+heightMoth = 31
 
 ### State variables ###
 
 dataSources = {}
-trips = {}
+dataNextUp = {}
+dataWhoMe = {}
 
 
 ### Converter functions ###
 
 converters = {
   "windDirection": lambda degrees: toCompassPoint(float(degrees)),
-  "time": lambda time: time[:5]
+  "time": lambda time: time[:5],
+  "hhmm": lambda date: datetime.datetime.fromisoformat(date).strftime("%H:%M")
 }
 
 ### Functions ###
+
+# Data requests
+ 
+# For each entry in sources make api request and put returned json in dataSources
+def requestAllSources():
+  for source in config["sources"]:
+    dataSources[source["name"]] = requestSource(source)
+
+def requestSource(source):
+  logging.debug("Requesting data source " + source["name"])
+
+  url = source["url"].format(
+    apikey = source["apikey"],
+    lat=str(config["location"]["lat"]),
+    long=str(config["location"]["long"])
+  )
+
+  headers = {}
+  if "headers" in source:
+    for key in source["headers"].keys():
+      headers[key] = source["headers"][key].format(
+        apikey = source["apikey"],
+        lat=str(config["location"]["lat"]),
+        long=str(config["location"]["long"])
+      )
+
+  try:
+    r = requests.get(url, headers=headers)
+    sourceData = json.loads(r.text)
+  except Exception as e:
+    logging.warning(e)
+
+  return sourceData
+
+def requestNextUp():
+  global dataNextUp
+  start = datetime.datetime.now(tz = datetime.timezone.utc) - datetime.timedelta(weeks=4)
+  end = datetime.datetime.now(tz = datetime.timezone.utc) + datetime.timedelta(weeks=52)
+  queryurl = config["nextup"]["url"] + "?start=" + start.strftime("%Y-%m-%dT%H:%M:%S.000Z") + "&end=" + end.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+  try:
+    r = requests.get(queryurl, headers={"authorization": "Bearer " + config["nextup"]["apikey"], "content-type": "application/json" })
+    dataNextUp = json.loads(r.text)
+  except Exception as e:
+    logging.warning(e)
 
 def toCompassPoint(degrees):
   if degrees < 22.5:
@@ -114,50 +196,61 @@ def wrap(image, text, wrapWidth, font):
 
   return output
 
+# Draw the calendar square in top left of screen
 def drawCalendar(image):
-  # Draw the calendar square in top left of screen
   dateNumber = datetime.date.today().strftime('%d')
   dateDay = datetime.date.today().strftime('%a')
   dateMonth = datetime.date.today().strftime('%b')
 
-  image.rounded_rectangle([(0,0),(157,157)], radius=12, fill=None, outline=colour["red"], width=4)
-  image.rounded_rectangle([(0,0),(157,41)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
-  image.text((79,20), dateMonth, colour["white"], font=fontCalSm, anchor="mm")
-  image.text((79,79), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
-  image.text((79,136), dateDay, colour["black"], font=fontCalSm, anchor="mm")
+  image.rounded_rectangle([anchorCalendar,(anchorCalendar[0] + widthCalendar, anchorCalendar[1] + heightCalendar)], radius=12, fill=None, outline=colour["red"], width=4)
+  image.rounded_rectangle([anchorCalendar,(anchorCalendar[0] + widthCalendar, anchorCalendar[1] + 42)], radius=12, fill=colour["red"], outline=colour["red"], width=4, corners=(True, True, False, False))
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)), anchorCalendar[0] + 21), dateMonth, colour["white"], font=fontCalSm, anchor="mm")
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)), anchorCalendar[0] + 80), dateNumber, colour["black"], font=fontCalBg, anchor="mm")
+  image.text(((anchorCalendar[0] + (widthCalendar // 2)),anchorCalendar[0] + 137), dateDay, colour["black"], font=fontCalSm, anchor="mm")
 
-def drawTrips(image):
+def drawNextUp(image):
   # Draw the next trip box next to the current date
-  image.rounded_rectangle([(161,0),(479,157)], radius=12, fill=None, outline=colour["black"], width=4)
+  image.rounded_rectangle([anchorNextUp,(anchorNextUp[0] + widthNextUp,anchorNextUp[1] + heightNextUp)], radius=12, fill=None, outline=colour["black"], width=4)
 
   # Get trips that haven't happened yet
-  upcomingTrips = []
-  for trip in trips["trips"]:
-    if datetime.date.fromisoformat(str(trip["date"])) > datetime.date.today():
-      upcomingTrips.append(trip)
+  nextUp = []
+  for event in dataNextUp:
+    if datetime.date.fromisoformat(str(event["start"]["date"])) > datetime.date.today():
+      nextUp.append(event)
 
   # Sort the list
-  upcomingTrips.sort(key=lambda trip: trip["date"], reverse=False)
+  nextUp.sort(key=lambda event: event["start"]["date"], reverse=False)
 
-  if len(upcomingTrips) > 0:
-    nextTrip = upcomingTrips[0]
-    nextTripDate = datetime.date.fromisoformat(str(nextTrip["date"]))
+  if len(nextUp) > 0:
+    # If there are events in the list get the first one
+    nextEvent = nextUp[0]
+
+    # extract data into indivdual varibles
+    nextEventDate = datetime.date.fromisoformat(str(nextEvent["start"]["date"]))
+    nextEventName = nextEvent["summary"]
     todayDate = datetime.date.today()
-    daysRemaining = (nextTripDate - todayDate).days
 
-    lines = wrap(image, nextTrip["destination"], 294, fontCalSm)
+    # work out how many days until the next event
+    daysRemaining = (nextEventDate - todayDate).days
 
-    image.text((170,28), lines[0], colour["black"], font=fontCalSm, anchor="lm")
+    # wordwarp the event name gives back a list
+    lines = wrap(image, nextEventName, (widthNextUp - (padding*2)), fontCalSm)
+
+    # draw the first line onto the display
+    image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 16), lines[0], colour["black"], font=fontCalSm, anchor="lm")
+    
+    # if there is more than one line draw the second, but end there as only 2 lines available
     if len(lines) > 1:
-      image.text((170,60), lines[1], colour["black"], font=fontCalSm, anchor="lm")
-    image.text((320,108), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
+      image.text((anchorNextUp[0] + padding, anchorNextUp[1] + padding + 32 + 16), lines[1], colour["black"], font=fontCalSm, anchor="lm")
+    
+    # draw the days remaining below the text
+    image.text((anchorNextUp[0] + (widthNextUp // 2), anchorNextUp[1] + padding + 32 + 32 + (64/2)), str(daysRemaining) + " days", colour["black"], font=fontCalBg, anchor="mm")
 
 def drawMoth(image):
   # Draw a text box below the date and next trip
   messageOfHour = "So long and thanks for all the fish"
-  image.rounded_rectangle([(0,161),(479,195)], radius=12, fill=None, outline=colour["blue"], width=4)
-  image.text((239, 161+17), messageOfHour, colour["blue"], font=fontGridLabel, anchor="mm")
-
+  image.rounded_rectangle([anchorMoth,(anchorMoth[0]+widthMoth,anchorMoth[1]+heightMoth)], radius=12, fill=None, outline=colour["blue"], width=4)
+  image.text((anchorMoth[0] + (widthMoth//2), anchorMoth[1] + (heightMoth//2)), messageOfHour, colour["blue"], font=fontGridLabel, anchor="mm")
 
 # edge case boxes
 def boxWeatherIcon(box, position, values):
@@ -165,28 +258,40 @@ def boxWeatherIcon(box, position, values):
   iconWeather = Image.open(fileIcon)
   iconWeather = ImageOps.invert(iconWeather)
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-  image.bitmap((((width / 2) - 48) + position[0][0], ((height / 2) - 48) + position[0][1]), iconWeather)
+  image.bitmap((((boxWidth / 2) - 48) + position[0][0], ((boxHeight / 2) - 48) + position[0][1]), iconWeather)
+
+def boxWhoMe(box, position, values):
+  image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
+
+  if len(dataSources["whome"]["members"]) > 0:
+    member = dataSources["whome"]["members"][0]
+    image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(member["name"]), colour["black"], font=fontWhoMeName, anchor="ma")
+
+    image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](member["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
+
+    image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
+    image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
 
 # standard boxes
 def boxTitledBig(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["black"], width=4)
   image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
 
 def boxBig(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["red"], width=4)
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridSingle, anchor="mm")
 
 def boxTitledDual(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
   image.text((padding +  position[0][0], padding + position[0][1]), str(box['title']), colour["black"], font=fontGridLabel, anchor="la")
-  image.text(((width / 2) +  position[0][0], (height / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
-  image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (3*boxHeight / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def boxDual(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["green"], width=4)
-  image.text(((width / 2) +  position[0][0], (height / 4) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
-  image.text(((width / 2) +  position[0][0], (3*height / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 4) + position[0][1]), values[0], colour["black"], font=fontGridDual, anchor="mm")
+  image.text(((boxWidth / 2) +  position[0][0], (3*boxHeight / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def getValue(value):
   jsonpath_expr = parse(value["path"])
@@ -213,10 +318,10 @@ def getValue(value):
 def getBoxPosition(index):
   row = index // rowWidth
   col = index % rowWidth
-  stx = (width + cellSpacing) * col
-  sty = ((height + cellSpacing) * row) + offset
-  spx = stx + width - 1
-  spy = sty + height - 1
+  stx = ((boxWidth + cellSpacing) * col) + anchorDataGrid[0]
+  sty = ((boxHeight + cellSpacing) * row) + anchorDataGrid[1]
+  spx = stx + boxWidth - 1
+  spy = sty + boxHeight - 1
 
   return [(stx,sty),(spx,spy)]
 
@@ -230,67 +335,80 @@ def drawDataGrid(image):
       for value in box["values"]:
         values.append(getValue(value))
 
-    if "type" in box and box["type"] == "weathericon":
-      boxWeatherIcon(box, position, values)
-    elif box['title'] is not None:
-      if len(values) > 1:
-        boxTitledDual(box, position, values)
-      else:
-        boxTitledBig(box, position, values)
-    else:
-      if len(values) > 1:
-        boxDual(box, position, values)
-      else:
-        boxBig(box, position, values)
+    if "type" in box:
+      match box["type"]:
+        case "weathericon":
+            boxWeatherIcon(box, position, values)
+        case "whome":
+            boxWhoMe(None, position, None)
+        case _:
+          if box['title'] is not None:
+            if len(values) > 1:
+              boxTitledDual(box, position, values)
+            else:
+              boxTitledBig(box, position, values)
+          else:
+            if len(values) > 1:
+              boxDual(box, position, values)
+            else:
+              boxBig(box, position, values)
 
     index = index + 1
 
 #### Initialisation
 
-# Load trips
-try:
-  with open("./trips.yaml", "r") as read_file:
-    trips = yaml.safe_load(read_file)
-except:
-  # logging.critical("Settings file missing")
-  exit()
-
-# Load in data
-
-for source in config["sources"]:
-  url = source["url"].format(
-    apikey = source["apikey"],
-    lat=str(config["location"]["lat"]),
-    long=str(config["location"]["long"])
-  )
-
-  headers = {}
-  if "headers" in source:
-    for key in source["headers"].keys():
-      headers[key] = source["headers"][key].format(
-        apikey = source["apikey"],
-        lat=str(config["location"]["lat"]),
-        long=str(config["location"]["long"])
-      )
-
-  try:
-    r = requests.get(url, headers=headers)
-    dataSources[source["name"]] = json.loads(r.text)
-  except Exception as e:
-    logging.warning(e)
+# Get data
+requestAllSources()
+requestNextUp()
 
 # Initialise display
 inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
+refreshDisplay = True
+minutePast = 0
 
 ### Main code
+while True:
+  if minutePast != time.localtime()[4]:
+    minutePast = time.localtime()[4]
 
-drawCalendar(image)
-drawTrips(image)
-drawMoth(image)
-drawDataGrid(image)
+    # iterate though srouces to see which need update
+    for source in config["sources"]:
+      # only update ones that need update
+      if "updateInterval" not in source:
+        continue
 
-inky.set_image(display.rotate(90, expand=True))
-inky.show()
+      if type(source["updateInterval"]) is int and ( time.localtime()[4] % source["updateInterval"] ) == 0:
+        # update this source every N minutes
+        newData = requestSource(source)
+        if newData != dataSources[source["name"]]:
+          logging.debug("Data source " + source["name"] + " changed, triggering redraw")
+          dataSources[source["name"]] = newData
+          refreshDisplay = True
+
+      elif type(source["updateInterval"]) is list and time.localtime()[4] in source["updateInterval"]:
+        newData = requestSource(source)
+        if newData != dataSources[source["name"]]:
+          logging.debug("Data source " + source["name"] + " changed, triggering redraw")
+          dataSources[source["name"]] = newData
+          refreshDisplay = True
+
+      else:
+        continue
+    
+    # update display if needed
+    if refreshDisplay:
+      drawCalendar(image)
+      drawNextUp(image)
+      drawMoth(image)
+      drawDataGrid(image)
+
+      inky.set_image(display.rotate(90, expand=True))
+      inky.show()
+
+      refreshDisplay = False
+
+    # Wait for a while
+    time.sleep(6)

@@ -2,9 +2,18 @@ location:
   lat: 
   long:
 
+nextup:
+  enabled: True
+  apikey: 
+  url:
+
+whome:
+  enabled: false
+  server:
+
 sleep:
-  start: 22:00
-  end: 8:00
+  start: 00:00
+  end: 06:00
 
 sources:
   - name:
