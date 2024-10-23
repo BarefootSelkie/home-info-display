@@ -146,14 +146,6 @@ def requestNextUp():
   except Exception as e:
     logging.warning(e)
 
-def requestWhoMe():
-  global dataWhoMe
-  try:
-    r = requests.get(config["whome"]["server"])
-    dataWhoMe = json.loads(r.text)
-  except Exception as e:
-    logging.warning(e)
-
 def toCompassPoint(degrees):
   if degrees < 22.5:
     return "N"
@@ -271,13 +263,14 @@ def boxWeatherIcon(box, position, values):
 def boxWhoMe(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
 
-  if len(dataWhoMe["members"]) > 0:
-    image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(dataWhoMe["members"][0]["name"]), colour["black"], font=fontWhoMeName, anchor="ma")
+  if len(dataSources["whome"]["members"]) > 0:
+    member = dataSources["whome"]["members"][0]
+    image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(member["name"]), colour["black"], font=fontWhoMeName, anchor="ma")
 
-    image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](dataWhoMe["members"][0]["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
+    image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](member["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
 
-    image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["cardSuit"], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
-    image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), dataWhoMe["members"][0]["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
+    image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
+    image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
 
 # standard boxes
 def boxTitledBig(box, position, values):
@@ -347,7 +340,6 @@ def drawDataGrid(image):
         case "weathericon":
             boxWeatherIcon(box, position, values)
         case "whome":
-            requestWhoMe()
             boxWhoMe(None, position, None)
         case _:
           if box['title'] is not None:
