@@ -400,6 +400,9 @@ while True:
     
     # update display if needed
     if refreshDisplay:
+      display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
+      image = ImageDraw.Draw(display)
+
       drawCalendar(image)
       drawNextUp(image)
       drawMoth(image)
