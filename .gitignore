@@ -2,6 +2,7 @@
 config-hid.yaml
 trips.yaml
 requests/*
+inky/*
 
 # Logging
 *.log
