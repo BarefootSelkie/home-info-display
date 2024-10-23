@@ -1,0 +1,16 @@
+certifi==2024.8.30
+charset-normalizer==3.4.0
+gpiod==2.2.1
+gpiodevice==0.0.5
+idna==3.10
+inky==2.0.0
+jsonpath-ng==1.7.0
+numpy==2.1.2
+pillow==11.0.0
+ply==3.11
+PyYAML==6.0.2
+requests==2.32.3
+smbus2==0.5.0
+spidev==3.6
+toml==0.10.2
+urllib3==2.2.3
