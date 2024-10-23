@@ -3,10 +3,6 @@
 		{
 			"name": "home-info-display",
 			"path": "."
-		},
-		{
-			"name": "testing",
-			"uri": "sftp://mxa@hid1.lan/home/mxa/testing"
 		}
 	],
 	"settings": {}
