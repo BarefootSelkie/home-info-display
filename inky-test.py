@@ -9,6 +9,7 @@ import logging
 import requests
 import json
 import argparse
+import time
 from jsonpath_ng.ext import parse
 
 # Arguments, Logging, Settings
@@ -103,28 +104,35 @@ converters = {
 # Data requests
  
 # For each entry in sources make api request and put returned json in dataSources
-def requestSources():
+def requestAllSources():
   for source in config["sources"]:
-    url = source["url"].format(
-      apikey = source["apikey"],
-      lat=str(config["location"]["lat"]),
-      long=str(config["location"]["long"])
-    )
+    dataSources[source["name"]] = requestSource(source)
 
-    headers = {}
-    if "headers" in source:
-      for key in source["headers"].keys():
-        headers[key] = source["headers"][key].format(
-          apikey = source["apikey"],
-          lat=str(config["location"]["lat"]),
-          long=str(config["location"]["long"])
-        )
+def requestSource(source):
+  logging.debug("Requesting data source " + source["name"])
 
-    try:
-      r = requests.get(url, headers=headers)
-      dataSources[source["name"]] = json.loads(r.text)
-    except Exception as e:
-      logging.warning(e)
+  url = source["url"].format(
+    apikey = source["apikey"],
+    lat=str(config["location"]["lat"]),
+    long=str(config["location"]["long"])
+  )
+
+  headers = {}
+  if "headers" in source:
+    for key in source["headers"].keys():
+      headers[key] = source["headers"][key].format(
+        apikey = source["apikey"],
+        lat=str(config["location"]["lat"]),
+        long=str(config["location"]["long"])
+      )
+
+  try:
+    r = requests.get(url, headers=headers)
+    sourceData = json.loads(r.text)
+  except Exception as e:
+    logging.warning(e)
+
+  return sourceData
 
 def requestNextUp():
   global dataNextUp
@@ -358,7 +366,7 @@ def drawDataGrid(image):
 #### Initialisation
 
 # Get data
-requestSources()
+requestAllSources()
 requestNextUp()
 
 # Initialise display
@@ -366,11 +374,49 @@ inky = InkyAC073TC1A(resolution=(800, 480))
 display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
 image = ImageDraw.Draw(display)
 
-### Main code
-drawCalendar(image)
-drawNextUp(image)
-drawMoth(image)
-drawDataGrid(image)
+refreshDisplay = True
+minutePast = 0
 
-inky.set_image(display.rotate(90, expand=True))
-inky.show()
+### Main code
+while True:
+  if minutePast != time.localtime()[4]:
+    minutePast = time.localtime()[4]
+
+    # iterate though srouces to see which need update
+    for source in config["sources"]:
+      # only update ones that need update
+      if "updateInterval" not in source:
+        continue
+
+      if type(source["updateInterval"]) is int and ( time.localtime()[4] % source["updateInterval"] ) == 0:
+        # update this source every N minutes
+        newData = requestSource(source)
+        if newData != dataSources[source["name"]]:
+          logging.debug("Data source " + source["name"] + " changed, triggering redraw")
+          dataSources[source["name"]] = newData
+          refreshDisplay = True
+
+      elif type(source["updateInterval"]) is list and time.localtime()[4] in source["updateInterval"]:
+        newData = requestSource(source)
+        if newData != dataSources[source["name"]]:
+          logging.debug("Data source " + source["name"] + " changed, triggering redraw")
+          dataSources[source["name"]] = newData
+          refreshDisplay = True
+
+      else:
+        continue
+    
+    # update display if needed
+    if refreshDisplay:
+      drawCalendar(image)
+      drawNextUp(image)
+      drawMoth(image)
+      drawDataGrid(image)
+
+      inky.set_image(display.rotate(90, expand=True))
+      inky.show()
+
+      refreshDisplay = False
+
+    # Wait for a while
+    time.sleep(6)
