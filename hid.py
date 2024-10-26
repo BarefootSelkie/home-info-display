@@ -96,7 +96,7 @@ dataWhoMe = {}
 converters = {
   "windDirection": lambda degrees: toCompassPoint(float(degrees)),
   "time": lambda time: time[:5],
-  "hhmm": lambda date: datetime.datetime.fromisoformat(date).strftime("%H:%M")
+  "hhmm": lambda date: datetime.datetime.fromisoformat(date).astimezone().strftime("%H:%M")
 }
 
 ### Functions ###
