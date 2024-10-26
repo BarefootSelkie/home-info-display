@@ -270,7 +270,7 @@ def boxWhoMe(box, position, values):
 
     image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](member["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
 
-    image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
+    image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"][0], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
     image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
 
 # standard boxes
