@@ -131,6 +131,7 @@ def requestSource(source):
     sourceData = json.loads(r.text)
   except Exception as e:
     logging.warning(e)
+    return None
 
   return sourceData
 
@@ -294,6 +295,11 @@ def boxDual(box, position, values):
   image.text(((boxWidth / 2) +  position[0][0], (3*boxHeight / 4) + position[0][1]), values[1], colour["black"], font=fontGridDual, anchor="mm")
 
 def getValue(value):
+
+  # Check if the data was retreived correctly
+  if dataSources[value["source"]] is None:
+    return "Error"
+
   jsonpath_expr = parse(value["path"])
   output = jsonpath_expr.find(dataSources[value["source"]])[0].value
   output = str(output)
