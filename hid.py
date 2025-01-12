@@ -407,6 +407,11 @@ while True:
       else:
         continue
     
+    # Refetch the Next Up data at 4am every day
+    if time.localtime()[4] == 0 and time.localtime()[3] == 4:
+      requestNextUp()
+      refreshDisplay = True
+
     # update display if needed
     if refreshDisplay:
       display = Image.new(mode="P", size=(480,800), color=(colour["white"]))
