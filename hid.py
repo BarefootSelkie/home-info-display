@@ -264,17 +264,18 @@ def boxWeatherIcon(box, position, values):
 def boxWhoMe(box, position, values):
   image.rounded_rectangle(position, radius=12, fill=None, outline=colour["blue"], width=4)
 
-  if len(dataSources["whome"]["members"]) > 0:
-    member = dataSources["whome"]["members"][0]
-    image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(member["name"]), colour["black"], font=fontWhoMeName, anchor="ma")
+  if dataSources["whome"] is not None:
+    if len(dataSources["whome"]["members"]) > 0:
+      member = dataSources["whome"]["members"][0]
+      image.text(((boxWidth / 2) +  position[0][0], padding + position[0][1]), str(member["name"]), colour["black"], font=fontWhoMeName, anchor="ma")
 
-    image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](member["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
+      image.text(((boxWidth / 2) +  position[0][0], (boxHeight / 2) + position[0][1]), converters["hhmm"](member["lastIn"]), colour["black"], font=fontWhoMeTime, anchor="mm")
 
-    if member["cardSuit"]:
-      image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"][0], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
-    
-    if member["elementName"]:
-      image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
+      if member["cardSuit"]:
+        image.text(((boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["cardSuit"][0], colour["black"], font=fontWhoMeSymbol2, anchor="mm")
+      
+      if member["elementName"]:
+        image.text(((3*boxWidth / 4) +  position[0][0], (3*boxHeight / 4) + position[0][1]), member["elementName"], colour["black"], font=fontWhoMeSymbol, anchor="mm")
 
 # standard boxes
 def boxTitledBig(box, position, values):
